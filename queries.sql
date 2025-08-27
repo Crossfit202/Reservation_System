@@ -1,12 +1,35 @@
+-- Delete all tables for easier DB refreshing
+DROP TABLE IF EXISTS payment CASCADE;
+DROP TABLE IF EXISTS reservation CASCADE;
+DROP TABLE IF EXISTS room_amenity CASCADE;
+DROP TABLE IF EXISTS app_user_roles CASCADE;
+DROP TABLE IF EXISTS room CASCADE;
+DROP TABLE IF EXISTS amenity CASCADE;
+DROP TABLE IF EXISTS room_type CASCADE;
+DROP TABLE IF EXISTS app_user CASCADE;
+DROP TABLE IF EXISTS role CASCADE;
+
 CREATE TABLE role (
     id SERIAL PRIMARY KEY,
     name VARCHAR(255) UNIQUE NOT NULL
 );
 
-CREATE TABLE "user" (
+CREATE TABLE app_user (
     id SERIAL PRIMARY KEY,
     email VARCHAR(255) UNIQUE NOT NULL,
     name VARCHAR(255)
+);
+
+CREATE TABLE room_type (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    description VARCHAR(255)
+);
+
+CREATE TABLE amenity (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    description VARCHAR(255)
 );
 
 CREATE TABLE room (
@@ -15,37 +38,19 @@ CREATE TABLE room (
     type VARCHAR(255) NOT NULL,
     capacity INT,
     price DOUBLE PRECISION,
-    amenities VARCHAR(255),
-    available BOOLEAN
+    available BOOLEAN,
+    room_type_id INT,
+    FOREIGN KEY (room_type_id) REFERENCES room_type(id)
 );
 
-CREATE TABLE user_roles (
+CREATE TABLE app_user_roles (
     user_id INT NOT NULL,
     role_id INT NOT NULL,
     PRIMARY KEY (user_id, role_id),
-    FOREIGN KEY (user_id) REFERENCES "user"(id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES app_user(id) ON DELETE CASCADE,
     FOREIGN KEY (role_id) REFERENCES role(id) ON DELETE CASCADE
 );
 
--- RoomType table
-CREATE TABLE room_type (
-    id SERIAL PRIMARY KEY,
-    name VARCHAR(255) NOT NULL,
-    description VARCHAR(255)
-);
-
--- Amenity table
-CREATE TABLE amenity (
-    id SERIAL PRIMARY KEY,
-    name VARCHAR(255) NOT NULL,
-    description VARCHAR(255)
-);
-
--- Room table update: add room_type_id
-ALTER TABLE room ADD COLUMN room_type_id INT;
-ALTER TABLE room ADD CONSTRAINT fk_room_type FOREIGN KEY (room_type_id) REFERENCES room_type(id);
-
--- Room_Amenity join table
 CREATE TABLE room_amenity (
     room_id INT NOT NULL,
     amenity_id INT NOT NULL,
@@ -54,10 +59,9 @@ CREATE TABLE room_amenity (
     FOREIGN KEY (amenity_id) REFERENCES amenity(id) ON DELETE CASCADE
 );
 
--- Reservation table
 CREATE TABLE reservation (
     id SERIAL PRIMARY KEY,
-    user_id INT NOT NULL,
+    app_user_id INT NOT NULL,
     room_id INT NOT NULL,
     check_in DATE NOT NULL,
     check_out DATE NOT NULL,
@@ -65,11 +69,10 @@ CREATE TABLE reservation (
     status VARCHAR(50) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES "user"(id) ON DELETE CASCADE,
+    FOREIGN KEY (app_user_id) REFERENCES app_user(id) ON DELETE CASCADE,
     FOREIGN KEY (room_id) REFERENCES room(id) ON DELETE CASCADE
 );
 
--- Payment table
 CREATE TABLE payment (
     id SERIAL PRIMARY KEY,
     reservation_id INT NOT NULL,
@@ -78,5 +81,5 @@ CREATE TABLE payment (
     status VARCHAR(50) NOT NULL,
     stripe_payment_id VARCHAR(255),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (reservation_id) REFERENCES reservation(id) ON DELETE CASCADE
+    FOREIGN KEY (reservation_id) REFERENCES reservation(id)
 );
