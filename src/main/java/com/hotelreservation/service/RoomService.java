@@ -21,11 +21,19 @@ public class RoomService {
     }
 
     public Room createRoom(Room room) {
+        if (roomRepository.findByRoomNumber(room.getRoomNumber()).isPresent()) {
+            throw new IllegalArgumentException("Room with this name already exists.");
+        }
         return roomRepository.save(room);
     }
 
     public Room updateRoom(Long id, Room roomDetails) {
         Room room = roomRepository.findById(id).orElseThrow();
+        if (!room.getRoomNumber().equals(roomDetails.getRoomNumber())) {
+            if (roomRepository.findByRoomNumber(roomDetails.getRoomNumber()).isPresent()) {
+                throw new IllegalArgumentException("Room with this name already exists.");
+            }
+        }
         room.setRoomNumber(roomDetails.getRoomNumber());
         room.setType(roomDetails.getType());
         room.setCapacity(roomDetails.getCapacity());
