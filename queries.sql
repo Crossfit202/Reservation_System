@@ -61,7 +61,7 @@ CREATE TABLE room_amenity (
 
 CREATE TABLE reservation (
     id SERIAL PRIMARY KEY,
-    app_user_id INT NOT NULL,
+    user_id INT NOT NULL, 
     room_id INT NOT NULL,
     check_in DATE NOT NULL,
     check_out DATE NOT NULL,
@@ -69,7 +69,7 @@ CREATE TABLE reservation (
     status VARCHAR(50) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (app_user_id) REFERENCES app_user(id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES app_user(id) ON DELETE CASCADE,
     FOREIGN KEY (room_id) REFERENCES room(id) ON DELETE CASCADE
 );
 

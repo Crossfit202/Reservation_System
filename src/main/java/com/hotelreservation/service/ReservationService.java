@@ -1,11 +1,13 @@
 package com.hotelreservation.service;
 
-import com.hotelreservation.entity.Reservation;
-import com.hotelreservation.repository.ReservationRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.hotelreservation.entity.Reservation;
+import com.hotelreservation.repository.ReservationRepository;
 
 @Service
 public class ReservationService {
@@ -25,16 +27,15 @@ public class ReservationService {
     }
 
     public Reservation updateReservation(Long id, Reservation reservationDetails) {
-        Reservation reservation = reservationRepository.findById(id).orElseThrow();
-        reservation.setCheckIn(reservationDetails.getCheckIn());
-        reservation.setCheckOut(reservationDetails.getCheckOut());
-        reservation.setNumGuests(reservationDetails.getNumGuests());
-        reservation.setStatus(reservationDetails.getStatus());
-        reservation.setRoom(reservationDetails.getRoom());
-        reservation.setUser(reservationDetails.getUser());
-        reservation.setCreatedAt(reservationDetails.getCreatedAt());
-        reservation.setUpdatedAt(reservationDetails.getUpdatedAt());
-        return reservationRepository.save(reservation);
+        Reservation existing = reservationRepository.findById(id).orElseThrow();
+        existing.setCheckIn(reservationDetails.getCheckIn());
+        existing.setCheckOut(reservationDetails.getCheckOut());
+        existing.setNumGuests(reservationDetails.getNumGuests());
+        existing.setStatus(reservationDetails.getStatus());
+        existing.setRoom(reservationDetails.getRoom());
+        existing.setUser(reservationDetails.getUser());
+        existing.setUpdatedAt(reservationDetails.getUpdatedAt());
+        return reservationRepository.save(existing);
     }
 
     public void deleteReservation(Long id) {

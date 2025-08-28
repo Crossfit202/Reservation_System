@@ -1,11 +1,13 @@
 package com.hotelreservation.service;
 
-import com.hotelreservation.entity.Payment;
-import com.hotelreservation.repository.PaymentRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.hotelreservation.entity.Payment;
+import com.hotelreservation.repository.PaymentRepository;
 
 @Service
 public class PaymentService {
@@ -30,7 +32,6 @@ public class PaymentService {
         payment.setCurrency(paymentDetails.getCurrency());
         payment.setStatus(paymentDetails.getStatus());
         payment.setStripePaymentId(paymentDetails.getStripePaymentId());
-        payment.setCreatedAt(paymentDetails.getCreatedAt());
         payment.setReservation(paymentDetails.getReservation());
         return paymentRepository.save(payment);
     }
