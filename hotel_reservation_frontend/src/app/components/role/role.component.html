@@ -1,1 +1,23 @@
-<p>role works!</p>
+<h2>Roles</h2>
+<ul>
+    <li *ngFor="let role of roles">
+        {{ role.name }}
+        <button (click)="selectRole(role)">Edit</button>
+        <button (click)="deleteRole(role.id!)">Delete</button>
+    </li>
+</ul>
+
+<h3>Add Role</h3>
+<form (ngSubmit)="createRole()">
+    <input [(ngModel)]="newRole.name" name="name" placeholder="Role Name" required>
+    <button type="submit">Add</button>
+</form>
+
+<div *ngIf="selectedRole">
+    <h3>Edit Role</h3>
+    <form (ngSubmit)="updateRole()">
+        <input [(ngModel)]="selectedRole!.name" name="editName" required>
+        <button type="submit">Update</button>
+        <button type="button" (click)="selectedRole = null">Cancel</button>
+    </form>
+</div>

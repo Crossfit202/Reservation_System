@@ -1,1 +1,40 @@
-<p>reservation works!</p>
+<h2>Reservations</h2>
+<ul>
+    <li *ngFor="let reservation of reservations">
+        User: {{ reservation.appUserId }} |
+        Room: {{ reservation.roomId }} |
+        Check-in: {{ reservation.checkIn }} |
+        Check-out: {{ reservation.checkOut }} |
+        Guests: {{ reservation.numGuests }} |
+        Status: {{ reservation.status }} |
+        Created: {{ reservation.createdAt }} |
+        Updated: {{ reservation.updatedAt }}
+        <button (click)="selectReservation(reservation)">Edit</button>
+        <button (click)="deleteReservation(reservation.id!)">Delete</button>
+    </li>
+</ul>
+
+<h3>Add Reservation</h3>
+<form (ngSubmit)="createReservation()">
+    <input [(ngModel)]="newReservation.appUserId" name="appUserId" type="number" placeholder="User ID" required>
+    <input [(ngModel)]="newReservation.roomId" name="roomId" type="number" placeholder="Room ID" required>
+    <input [(ngModel)]="newReservation.checkIn" name="checkIn" type="date" placeholder="Check-in" required>
+    <input [(ngModel)]="newReservation.checkOut" name="checkOut" type="date" placeholder="Check-out" required>
+    <input [(ngModel)]="newReservation.numGuests" name="numGuests" type="number" min="1" placeholder="Guests" required>
+    <input [(ngModel)]="newReservation.status" name="status" placeholder="Status" required>
+    <button type="submit">Add</button>
+</form>
+
+<div *ngIf="selectedReservation">
+    <h3>Edit Reservation</h3>
+    <form (ngSubmit)="updateReservation()">
+        <input [(ngModel)]="selectedReservation!.appUserId" name="editAppUserId" type="number" required>
+        <input [(ngModel)]="selectedReservation!.roomId" name="editRoomId" type="number" required>
+        <input [(ngModel)]="selectedReservation!.checkIn" name="editCheckIn" type="date" required>
+        <input [(ngModel)]="selectedReservation!.checkOut" name="editCheckOut" type="date" required>
+        <input [(ngModel)]="selectedReservation!.numGuests" name="editNumGuests" type="number" min="1" required>
+        <input [(ngModel)]="selectedReservation!.status" name="editStatus" required>
+        <button type="submit">Update</button>
+        <button type="button" (click)="selectedReservation = null">Cancel</button>
+    </form>
+</div>

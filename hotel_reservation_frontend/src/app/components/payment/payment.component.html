@@ -1,1 +1,36 @@
-<p>payment works!</p>
+<h2>Payments</h2>
+<ul>
+    <li *ngFor="let payment of payments">
+        Reservation: {{ payment.reservationId }} |
+        Amount: {{ payment.amount }} {{ payment.currency }} |
+        Status: {{ payment.status }} |
+        Stripe ID: {{ payment.stripePaymentId }} |
+        Created: {{ payment.createdAt }}
+        <button (click)="selectPayment(payment)">Edit</button>
+        <button (click)="deletePayment(payment.id!)">Delete</button>
+    </li>
+</ul>
+
+<h3>Add Payment</h3>
+<form (ngSubmit)="createPayment()">
+    <input [(ngModel)]="newPayment.reservationId" name="reservationId" type="number" placeholder="Reservation ID"
+        required>
+    <input [(ngModel)]="newPayment.amount" name="amount" type="number" placeholder="Amount" required>
+    <input [(ngModel)]="newPayment.currency" name="currency" placeholder="Currency" required>
+    <input [(ngModel)]="newPayment.status" name="status" placeholder="Status" required>
+    <input [(ngModel)]="newPayment.stripePaymentId" name="stripePaymentId" placeholder="Stripe Payment ID">
+    <button type="submit">Add</button>
+</form>
+
+<div *ngIf="selectedPayment">
+    <h3>Edit Payment</h3>
+    <form (ngSubmit)="updatePayment()">
+        <input [(ngModel)]="selectedPayment!.reservationId" name="editReservationId" type="number" required>
+        <input [(ngModel)]="selectedPayment!.amount" name="editAmount" type="number" required>
+        <input [(ngModel)]="selectedPayment!.currency" name="editCurrency" required>
+        <input [(ngModel)]="selectedPayment!.status" name="editStatus" required>
+        <input [(ngModel)]="selectedPayment!.stripePaymentId" name="editStripePaymentId">
+        <button type="submit">Update</button>
+        <button type="button" (click)="selectedPayment = null">Cancel</button>
+    </form>
+</div>

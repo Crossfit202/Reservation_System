@@ -1,1 +1,44 @@
-<p>room works!</p>
+<h2>Rooms</h2>
+<ul>
+    <li *ngFor="let room of rooms">
+        Number: {{ room.roomNumber }} |
+        Type: {{ room.type }} |
+        Capacity: {{ room.capacity }} |
+        Price: {{ room.price }} |
+        Available: {{ room.available ? 'Yes' : 'No' }} |
+        Room Type ID: {{ room.roomTypeId }}
+        <button (click)="selectRoom(room)">Edit</button>
+        <button (click)="deleteRoom(room.id!)">Delete</button>
+    </li>
+</ul>
+
+<h3>Add Room</h3>
+<form (ngSubmit)="createRoom()">
+    <input [(ngModel)]="newRoom.roomNumber" name="roomNumber" placeholder="Room Number" required>
+    <input [(ngModel)]="newRoom.type" name="type" placeholder="Type" required>
+    <input [(ngModel)]="newRoom.capacity" name="capacity" type="number" min="1" placeholder="Capacity">
+    <input [(ngModel)]="newRoom.price" name="price" type="number" step="0.01" placeholder="Price">
+    <label>
+        Available:
+        <input [(ngModel)]="newRoom.available" name="available" type="checkbox">
+    </label>
+    <input [(ngModel)]="newRoom.roomTypeId" name="roomTypeId" type="number" placeholder="Room Type ID">
+    <button type="submit">Add</button>
+</form>
+
+<div *ngIf="selectedRoom">
+    <h3>Edit Room</h3>
+    <form (ngSubmit)="updateRoom()">
+        <input [(ngModel)]="selectedRoom!.roomNumber" name="editRoomNumber" required>
+        <input [(ngModel)]="selectedRoom!.type" name="editType" required>
+        <input [(ngModel)]="selectedRoom!.capacity" name="editCapacity" type="number" min="1">
+        <input [(ngModel)]="selectedRoom!.price" name="editPrice" type="number" step="0.01">
+        <label>
+            Available:
+            <input [(ngModel)]="selectedRoom!.available" name="editAvailable" type="checkbox">
+        </label>
+        <input [(ngModel)]="selectedRoom!.roomTypeId" name="editRoomTypeId" type="number">
+        <button type="submit">Update</button>
+        <button type="button" (click)="selectedRoom = null">Cancel</button>
+    </form>
+</div>

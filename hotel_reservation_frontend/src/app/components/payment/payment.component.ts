@@ -1,11 +1,66 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { PaymentService } from '../../services/payment.service';
+import { Payment } from '../../Models/payment.model';
 
 @Component({
   selector: 'app-payment',
-  imports: [],
   templateUrl: './payment.component.html',
-  styleUrl: './payment.component.css'
+  styleUrls: ['./payment.component.css'],
+  standalone: true,
+  imports: [CommonModule, FormsModule]
 })
-export class PaymentComponent {
+export class PaymentComponent implements OnInit {
+  payments: Payment[] = [];
+  selectedPayment: Payment | null = null;
+  newPayment: Payment = {
+    reservationId: 0,
+    amount: 0,
+    currency: '',
+    status: '',
+    stripePaymentId: '',
+    createdAt: ''
+  };
 
+  constructor(private paymentService: PaymentService) { }
+
+  ngOnInit(): void {
+    this.loadPayments();
+  }
+
+  loadPayments(): void {
+    this.paymentService.getAll().subscribe(data => this.payments = data);
+  }
+
+  selectPayment(payment: Payment): void {
+    this.selectedPayment = { ...payment };
+  }
+
+  createPayment(): void {
+    this.paymentService.create(this.newPayment).subscribe(() => {
+      this.loadPayments();
+      this.newPayment = {
+        reservationId: 0,
+        amount: 0,
+        currency: '',
+        status: '',
+        stripePaymentId: '',
+        createdAt: ''
+      };
+    });
+  }
+
+  updatePayment(): void {
+    if (this.selectedPayment && this.selectedPayment.id) {
+      this.paymentService.update(this.selectedPayment.id, this.selectedPayment).subscribe(() => {
+        this.loadPayments();
+        this.selectedPayment = null;
+      });
+    }
+  }
+
+  deletePayment(id: number): void {
+    this.paymentService.delete(id).subscribe(() => this.loadPayments());
+  }
 }
