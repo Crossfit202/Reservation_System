@@ -14,7 +14,7 @@ import { AppUser } from '../../Models/app-user.model';
 export class AppUserComponent implements OnInit {
   users: AppUser[] = [];
   selectedUser: AppUser | null = null;
-  newUser: AppUser = { username: '', email: '' };
+  newUser: AppUser = { name: '', email: '' };
 
   constructor(private userService: AppUserService) { }
 
@@ -33,7 +33,7 @@ export class AppUserComponent implements OnInit {
   createUser(): void {
     this.userService.create(this.newUser).subscribe(() => {
       this.loadUsers();
-      this.newUser = { username: '', email: '' };
+      this.newUser = { name: '', email: '' };
     });
   }
 

@@ -3,6 +3,10 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ReservationService } from '../../services/reservation.service';
 import { Reservation } from '../../Models/reservation.model';
+import { AppUser } from '../../Models/app-user.model';
+import { Room } from '../../Models/room.model';
+import { AppUserService } from '../../services/app-user.service';
+import { RoomService } from '../../services/room.service';
 
 @Component({
   selector: 'app-reservation',
@@ -25,14 +29,31 @@ export class ReservationComponent implements OnInit {
     updatedAt: ''
   };
 
-  constructor(private reservationService: ReservationService) { }
+  users: AppUser[] = [];
+  rooms: Room[] = [];
+
+  constructor(
+    private reservationService: ReservationService,
+    private appUserService: AppUserService,
+    private roomService: RoomService
+  ) { }
 
   ngOnInit(): void {
     this.loadReservations();
+    this.loadUsers();
+    this.loadRooms();
   }
 
   loadReservations(): void {
     this.reservationService.getAll().subscribe(data => this.reservations = data);
+  }
+
+  loadUsers(): void {
+    this.appUserService.getAll().subscribe(data => this.users = data);
+  }
+
+  loadRooms(): void {
+    this.roomService.getAll().subscribe(data => this.rooms = data);
   }
 
   selectReservation(reservation: Reservation): void {

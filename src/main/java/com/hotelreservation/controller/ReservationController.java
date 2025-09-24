@@ -1,7 +1,13 @@
 package com.hotelreservation.controller;
 
+import com.hotelreservation.entity.AppUser;
 import com.hotelreservation.entity.Reservation;
+import com.hotelreservation.entity.Room;
+import com.hotelreservation.repository.RoomRepository;
+import com.hotelreservation.repository.UserRepository;
 import com.hotelreservation.service.ReservationService;
+import com.hotelreservation.dto.ReservationRequest;
+import com.hotelreservation.dto.ReservationResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,27 +19,60 @@ public class ReservationController {
     @Autowired
     private ReservationService reservationService;
 
+    @Autowired
+    private RoomRepository roomRepository;
+
+    @Autowired
+    private UserRepository userRepository;
+
     @GetMapping
-    public List<Reservation> getAllReservations() {
-        return reservationService.getAllReservations();
+    public List<ReservationResponse> getAllReservations() {
+        return reservationService.getAllReservations()
+                .stream()
+                .map(ReservationResponse::new)
+                .toList();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Reservation> getReservationById(@PathVariable Long id) {
+    public ResponseEntity<ReservationResponse> getReservationById(@PathVariable Long id) {
         return reservationService.getReservationById(id)
-                .map(ResponseEntity::ok)
+                .map(reservation -> ResponseEntity.ok(new ReservationResponse(reservation)))
                 .orElse(ResponseEntity.notFound().build());
     }
 
     @PostMapping
-    public Reservation createReservation(@RequestBody Reservation reservation) {
-        return reservationService.createReservation(reservation);
+    public ReservationResponse createReservation(@RequestBody ReservationRequest request) {
+        Room room = roomRepository.findById(request.roomId).orElseThrow();
+        AppUser user = userRepository.findById(request.appUserId).orElseThrow();
+
+        Reservation reservation = new Reservation();
+        reservation.setRoom(room);
+        reservation.setUser(user);
+        reservation.setCheckIn(java.time.LocalDate.parse(request.checkIn));
+        reservation.setCheckOut(java.time.LocalDate.parse(request.checkOut));
+        reservation.setNumGuests(request.numGuests);
+        reservation.setStatus(request.status);
+
+        Reservation savedReservation = reservationService.createReservation(reservation);
+        return new ReservationResponse(savedReservation);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Reservation> updateReservation(@PathVariable Long id,
-            @RequestBody Reservation reservationDetails) {
-        return ResponseEntity.ok(reservationService.updateReservation(id, reservationDetails));
+    public ResponseEntity<ReservationResponse> updateReservation(@PathVariable Long id,
+            @RequestBody ReservationRequest request) {
+        Room room = roomRepository.findById(request.roomId).orElseThrow();
+        AppUser user = userRepository.findById(request.appUserId).orElseThrow();
+
+        Reservation reservation = new Reservation();
+        reservation.setRoom(room);
+        reservation.setUser(user);
+        reservation.setCheckIn(java.time.LocalDate.parse(request.checkIn));
+        reservation.setCheckOut(java.time.LocalDate.parse(request.checkOut));
+        reservation.setNumGuests(request.numGuests);
+        reservation.setStatus(request.status);
+
+        Reservation updatedReservation = reservationService.updateReservation(id, reservation);
+        return ResponseEntity.ok(new ReservationResponse(updatedReservation));
     }
 
     @DeleteMapping("/{id}")

@@ -3,6 +3,8 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { RoomService } from '../../services/room.service';
 import { Room } from '../../Models/room.model';
+import { RoomTypeService } from '../../services/room-type.service';
+import { RoomType } from '../../Models/room-type.model';
 
 @Component({
   selector: 'app-room',
@@ -23,14 +25,24 @@ export class RoomComponent implements OnInit {
     roomTypeId: undefined
   };
 
-  constructor(private roomService: RoomService) { }
+  roomTypes: RoomType[] = [];
+
+  constructor(
+    private roomService: RoomService,
+    private roomTypeService: RoomTypeService
+  ) { }
 
   ngOnInit(): void {
     this.loadRooms();
+    this.loadRoomTypes();
   }
 
   loadRooms(): void {
     this.roomService.getAll().subscribe(data => this.rooms = data);
+  }
+
+  loadRoomTypes(): void {
+    this.roomTypeService.getAll().subscribe(data => this.roomTypes = data);
   }
 
   selectRoom(room: Room): void {

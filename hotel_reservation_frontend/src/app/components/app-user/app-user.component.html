@@ -3,7 +3,7 @@
 <h2>Users</h2>
 <ul>
     <li *ngFor="let user of users">
-        {{ user.username }} - {{ user.email }}
+        {{ user.name }} - {{ user.email }}
         <button (click)="selectUser(user)">Edit</button>
         <button (click)="deleteUser(user.id!)">Delete</button>
     </li>
@@ -11,7 +11,7 @@
 
 <h3>Add User</h3>
 <form (ngSubmit)="createUser()">
-    <input [(ngModel)]="newUser.username" name="username" placeholder="Username" required>
+    <input [(ngModel)]="newUser.name" name="name" placeholder="Name" required>
     <input [(ngModel)]="newUser.email" name="email" placeholder="Email" required>
     <button type="submit">Add</button>
 </form>
@@ -19,7 +19,7 @@
 <div *ngIf="selectedUser">
     <h3>Edit User</h3>
     <form (ngSubmit)="updateUser()">
-        <input [(ngModel)]="selectedUser!.username" name="editUsername" required>
+        <input [(ngModel)]="selectedUser!.name" name="editName" required>
         <input [(ngModel)]="selectedUser!.email" name="editEmail" required>
         <button type="submit">Update</button>
         <button type="button" (click)="selectedUser = null">Cancel</button>

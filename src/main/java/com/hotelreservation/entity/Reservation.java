@@ -18,7 +18,7 @@ public class Reservation {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "app_user_id", nullable = false) // <-- match DB column name
     private AppUser user;
 
     @ManyToOne

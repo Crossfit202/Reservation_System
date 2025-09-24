@@ -15,14 +15,16 @@
 <h3>Add Room</h3>
 <form (ngSubmit)="createRoom()">
     <input [(ngModel)]="newRoom.roomNumber" name="roomNumber" placeholder="Room Number" required>
-    <input [(ngModel)]="newRoom.type" name="type" placeholder="Type" required>
+    <select [(ngModel)]="newRoom.roomTypeId" name="roomTypeId" placeholder="Room Type" required>
+        <option value="" disabled selected>Select Room Type</option>
+        <option *ngFor="let rt of roomTypes" [value]="rt.id">{{ rt.name }}</option>
+    </select>
     <input [(ngModel)]="newRoom.capacity" name="capacity" type="number" min="1" placeholder="Capacity">
     <input [(ngModel)]="newRoom.price" name="price" type="number" step="0.01" placeholder="Price">
     <label>
         Available:
         <input [(ngModel)]="newRoom.available" name="available" type="checkbox">
     </label>
-    <input [(ngModel)]="newRoom.roomTypeId" name="roomTypeId" type="number" placeholder="Room Type ID">
     <button type="submit">Add</button>
 </form>
 

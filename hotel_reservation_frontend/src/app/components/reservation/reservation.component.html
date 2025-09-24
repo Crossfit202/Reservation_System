@@ -1,8 +1,8 @@
 <h2>Reservations</h2>
 <ul>
     <li *ngFor="let reservation of reservations">
-        User: {{ reservation.appUserId }} |
-        Room: {{ reservation.roomId }} |
+        User: {{ reservation.appUserName }} ({{ reservation.appUserEmail }}) |
+        Room: {{ reservation.roomNumber }} ({{ reservation.roomType }}) |
         Check-in: {{ reservation.checkIn }} |
         Check-out: {{ reservation.checkOut }} |
         Guests: {{ reservation.numGuests }} |
@@ -16,8 +16,16 @@
 
 <h3>Add Reservation</h3>
 <form (ngSubmit)="createReservation()">
-    <input [(ngModel)]="newReservation.appUserId" name="appUserId" type="number" placeholder="User ID" required>
-    <input [(ngModel)]="newReservation.roomId" name="roomId" type="number" placeholder="Room ID" required>
+    <select [(ngModel)]="newReservation.appUserId" name="appUserId" required>
+        <option value="" disabled selected>Select User</option>
+        <option *ngFor="let user of users" [value]="user.id">
+            {{ user.name || user.email || ('User ' + user.id) }}
+        </option>
+    </select>
+    <select [(ngModel)]="newReservation.roomId" name="roomId" required>
+        <option value="" disabled selected>Select Room</option>
+        <option *ngFor="let room of rooms" [value]="room.id">{{ room.roomNumber }}</option>
+    </select>
     <input [(ngModel)]="newReservation.checkIn" name="checkIn" type="date" placeholder="Check-in" required>
     <input [(ngModel)]="newReservation.checkOut" name="checkOut" type="date" placeholder="Check-out" required>
     <input [(ngModel)]="newReservation.numGuests" name="numGuests" type="number" min="1" placeholder="Guests" required>
@@ -28,8 +36,16 @@
 <div *ngIf="selectedReservation">
     <h3>Edit Reservation</h3>
     <form (ngSubmit)="updateReservation()">
-        <input [(ngModel)]="selectedReservation!.appUserId" name="editAppUserId" type="number" required>
-        <input [(ngModel)]="selectedReservation!.roomId" name="editRoomId" type="number" required>
+        <select [(ngModel)]="selectedReservation!.appUserId" name="editAppUserId" required>
+            <option value="" disabled>Select User</option>
+            <option *ngFor="let user of users" [value]="user.id">
+                {{ user.name || user.email || ('User ' + user.id) }}
+            </option>
+        </select>
+        <select [(ngModel)]="selectedReservation!.roomId" name="editRoomId" required>
+            <option value="" disabled>Select Room</option>
+            <option *ngFor="let room of rooms" [value]="room.id">{{ room.roomNumber }}</option>
+        </select>
         <input [(ngModel)]="selectedReservation!.checkIn" name="editCheckIn" type="date" required>
         <input [(ngModel)]="selectedReservation!.checkOut" name="editCheckOut" type="date" required>
         <input [(ngModel)]="selectedReservation!.numGuests" name="editNumGuests" type="number" min="1" required>

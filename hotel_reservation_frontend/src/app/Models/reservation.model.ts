@@ -1,11 +1,15 @@
 export interface Reservation {
     id?: number;
-    appUserId: number;
-    roomId: number;
-    checkIn: string;      // ISO date string (e.g., '2024-09-22')
-    checkOut: string;     // ISO date string
+    appUserId?: number;
+    appUserName?: string;
+    appUserEmail?: string;
+    roomId?: number;
+    roomNumber?: string;
+    roomType?: string;
+    checkIn: string;
+    checkOut: string;
     numGuests: number;
     status: string;
-    createdAt?: string;   // ISO date string
-    updatedAt?: string;   // ISO date string
+    createdAt?: string;
+    updatedAt?: string;
 }
