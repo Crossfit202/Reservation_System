@@ -1,1 +1,25 @@
-<h1>Hi, welcome to the Hotel Reservation App!</h1>
+<div class="welcome-container">
+    <button class="burger" (click)="toggleMenu()">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+    <nav class="nav-drawer" [class.open]="menuOpen">
+        <a routerLink="/home" (click)="closeMenu()">Home</a>
+        <a routerLink="/rooms" (click)="closeMenu()">Rooms</a>
+        <a routerLink="/reservations" (click)="closeMenu()">Reservations</a>
+        <a routerLink="/amenities" (click)="closeMenu()">Amenities</a>
+        <a routerLink="/users" (click)="closeMenu()">Users</a>
+        <a routerLink="/payments" (click)="closeMenu()">Payments</a>
+        <a routerLink="/room-types" (click)="closeMenu()">Room Types</a>
+        <a routerLink="/roles" (click)="closeMenu()">Roles</a>
+    </nav>
+    <h1>Welcome to Hotel Reservation App!</h1>
+    <p class="subtitle">Book your perfect stay with ease.</p>
+    <div class="actions">
+        <a routerLink="/rooms" class="btn">Browse Rooms</a>
+        <a routerLink="/reservations" class="btn">My Reservations</a>
+        <a routerLink="/amenities" class="btn">Amenities</a>
+    </div>
+    <img src="assets/hotel.jpg" alt="Hotel" class="hero-image">
+</div>

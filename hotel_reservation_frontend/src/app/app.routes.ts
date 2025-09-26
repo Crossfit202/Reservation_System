@@ -10,6 +10,7 @@ import { RoleComponent } from './components/role/role.component';
 
 export const routes: Routes = [
     { path: '', component: WelcomeScreenComponent },
+    { path: 'home', component: WelcomeScreenComponent },
     { path: 'amenities', component: AmenityComponent },
     { path: 'users', component: AppUserComponent },
     { path: 'payments', component: PaymentComponent },
