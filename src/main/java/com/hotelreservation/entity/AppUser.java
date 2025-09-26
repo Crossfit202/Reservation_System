@@ -15,6 +15,8 @@ public class AppUser {
 
     private String name;
 
+    private String password;
+
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "app_user_roles", // updated line
             joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
@@ -43,6 +45,14 @@ public class AppUser {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public Set<Role> getRoles() {
