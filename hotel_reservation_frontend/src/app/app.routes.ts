@@ -7,15 +7,21 @@ import { ReservationComponent } from './components/reservation/reservation.compo
 import { RoomComponent } from './components/room/room.component';
 import { RoomTypeComponent } from './components/room-type/room-type.component';
 import { RoleComponent } from './components/role/role.component';
+import { LoginComponent } from './components/login/login.component';
+import { RegisterComponent } from './components/register/register.component';
+import { AuthGuard } from './services/auth.guard';
 
 export const routes: Routes = [
     { path: '', component: WelcomeScreenComponent },
-    { path: 'home', component: WelcomeScreenComponent },
-    { path: 'amenities', component: AmenityComponent },
-    { path: 'users', component: AppUserComponent },
-    { path: 'payments', component: PaymentComponent },
-    { path: 'reservations', component: ReservationComponent },
-    { path: 'rooms', component: RoomComponent },
-    { path: 'room-types', component: RoomTypeComponent },
-    { path: 'roles', component: RoleComponent }
+    { path: 'login', component: LoginComponent },
+    { path: 'register', component: RegisterComponent },
+
+
+    { path: 'rooms', component: RoomComponent, canActivate: [AuthGuard] },
+    { path: 'reservations', component: ReservationComponent, canActivate: [AuthGuard] },
+    { path: 'amenities', component: AmenityComponent, canActivate: [AuthGuard] },
+    { path: 'users', component: AppUserComponent, canActivate: [AuthGuard] },
+    { path: 'payments', component: PaymentComponent, canActivate: [AuthGuard] },
+    { path: 'room-types', component: RoomTypeComponent, canActivate: [AuthGuard] },
+    { path: 'roles', component: RoleComponent, canActivate: [AuthGuard] },
 ];
