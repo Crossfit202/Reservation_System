@@ -7,6 +7,14 @@
         Price: {{ room.price }} |
         Available: {{ room.available ? 'Yes' : 'No' }} |
         Room Type ID: {{ room.roomTypeId }}
+        <br>
+        Amenities:
+        <span *ngIf="room.amenitiesSet?.length; else noAmenities">
+            <span *ngFor="let amenity of room.amenitiesSet; let last = last">
+                {{ amenity.name }}<span *ngIf="!last">, </span>
+            </span>
+        </span>
+        <ng-template #noAmenities>None</ng-template>
         <button (click)="selectRoom(room)">Edit</button>
         <button (click)="deleteRoom(room.id!)">Delete</button>
     </li>

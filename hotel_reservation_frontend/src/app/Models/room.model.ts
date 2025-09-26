@@ -1,3 +1,5 @@
+import { Amenity } from './amenity.model';
+
 export interface Room {
     id?: number;
     roomNumber: string;
@@ -6,4 +8,5 @@ export interface Room {
     price?: number;
     available?: boolean;
     roomTypeId?: number;
+    amenitiesSet?: Amenity[]; // <-- Change to amenitiesSet
 }
