@@ -33,6 +33,12 @@
         Available:
         <input [(ngModel)]="newRoom.available" name="available" type="checkbox">
     </label>
+    <label>
+        Amenities:
+        <select multiple [(ngModel)]="newRoom.amenityIds" name="amenityIds">
+            <option *ngFor="let amenity of amenities" [value]="amenity.id">{{ amenity.name }}</option>
+        </select>
+    </label>
     <button type="submit">Add</button>
 </form>
 
@@ -48,6 +54,12 @@
             <input [(ngModel)]="selectedRoom!.available" name="editAvailable" type="checkbox">
         </label>
         <input [(ngModel)]="selectedRoom!.roomTypeId" name="editRoomTypeId" type="number">
+        <label>
+            Amenities:
+            <select multiple [(ngModel)]="selectedRoom.amenityIds" name="editAmenityIds">
+                <option *ngFor="let amenity of amenities" [value]="amenity.id">{{ amenity.name }}</option>
+            </select>
+        </label>
         <button type="submit">Update</button>
         <button type="button" (click)="selectedRoom = null">Cancel</button>
     </form>

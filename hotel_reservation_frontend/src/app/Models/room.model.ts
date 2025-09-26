@@ -8,5 +8,6 @@ export interface Room {
     price?: number;
     available?: boolean;
     roomTypeId?: number;
-    amenitiesSet?: Amenity[]; // <-- Change to amenitiesSet
+    amenitiesSet?: Amenity[];
+    amenityIds?: number[];
 }

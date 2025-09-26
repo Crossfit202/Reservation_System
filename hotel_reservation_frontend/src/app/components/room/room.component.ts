@@ -5,6 +5,8 @@ import { RoomService } from '../../services/room.service';
 import { Room } from '../../Models/room.model';
 import { RoomTypeService } from '../../services/room-type.service';
 import { RoomType } from '../../Models/room-type.model';
+import { Amenity } from '../../Models/amenity.model';
+import { AmenityService } from '../../services/amenity.service';
 
 @Component({
   selector: 'app-room',
@@ -22,19 +24,23 @@ export class RoomComponent implements OnInit {
     capacity: 1,
     price: 0,
     available: true,
-    roomTypeId: undefined
+    roomTypeId: undefined,
+    amenityIds: []
   };
 
   roomTypes: RoomType[] = [];
+  amenities: Amenity[] = [];
 
   constructor(
     private roomService: RoomService,
-    private roomTypeService: RoomTypeService
+    private roomTypeService: RoomTypeService,
+    private amenityService: AmenityService
   ) { }
 
   ngOnInit(): void {
     this.loadRooms();
     this.loadRoomTypes();
+    this.loadAmenities();
   }
 
   loadRooms(): void {
@@ -43,6 +49,10 @@ export class RoomComponent implements OnInit {
 
   loadRoomTypes(): void {
     this.roomTypeService.getAll().subscribe(data => this.roomTypes = data);
+  }
+
+  loadAmenities(): void {
+    this.amenityService.getAll().subscribe(data => this.amenities = data);
   }
 
   selectRoom(room: Room): void {
@@ -58,7 +68,8 @@ export class RoomComponent implements OnInit {
         capacity: 1,
         price: 0,
         available: true,
-        roomTypeId: undefined
+        roomTypeId: undefined,
+        amenityIds: []
       };
     });
   }
