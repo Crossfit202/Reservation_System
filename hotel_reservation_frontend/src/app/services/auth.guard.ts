@@ -11,13 +11,20 @@ export class AuthGuard implements CanActivate {
       this.router.navigate(['/login']);
       return false;
     }
-    // Optionally: decode token and check roles
-    // Example: only allow if token contains "USER" role
-    const payload = JSON.parse(atob(token.split('.')[1]));
-    if (!payload.roles || !payload.roles.includes('USER')) {
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      const now = Math.floor(Date.now() / 1000); // current time in seconds
+      if (payload.exp && now > payload.exp) {
+        localStorage.removeItem('jwt');
+        this.router.navigate(['/login']);
+        return false;
+      }
+      // Optionally check roles here
+      return true;
+    } catch (e) {
+      localStorage.removeItem('jwt');
       this.router.navigate(['/login']);
       return false;
     }
-    return true;
   }
 }
