@@ -89,3 +89,12 @@
     padding: 8px 16px;
     margin-top: 20px;
 }
+
+.navbar-logo {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    height: 100px;
+    width: auto;
+    z-index: 1100;
+}

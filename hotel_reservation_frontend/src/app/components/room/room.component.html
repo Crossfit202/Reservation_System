@@ -23,7 +23,7 @@
 <h3>Add Room</h3>
 <form (ngSubmit)="createRoom()">
     <input [(ngModel)]="newRoom.roomNumber" name="roomNumber" placeholder="Room Number" required>
-    <select [(ngModel)]="newRoom.roomTypeId" name="roomTypeId" placeholder="Room Type" required>
+    <select [(ngModel)]="newRoom.roomTypeId" name="roomTypeId" (change)="onRoomTypeChange($event)">
         <option value="" disabled selected>Select Room Type</option>
         <option *ngFor="let rt of roomTypes" [value]="rt.id">{{ rt.name }}</option>
     </select>
@@ -45,15 +45,17 @@
 <div *ngIf="selectedRoom">
     <h3>Edit Room</h3>
     <form (ngSubmit)="updateRoom()">
-        <input [(ngModel)]="selectedRoom!.roomNumber" name="editRoomNumber" required>
-        <input [(ngModel)]="selectedRoom!.type" name="editType" required>
-        <input [(ngModel)]="selectedRoom!.capacity" name="editCapacity" type="number" min="1">
-        <input [(ngModel)]="selectedRoom!.price" name="editPrice" type="number" step="0.01">
+        <input [(ngModel)]="selectedRoom.roomNumber" name="editRoomNumber" required>
+        <select [(ngModel)]="selectedRoom.roomTypeId" name="editRoomTypeId" (change)="onEditRoomTypeChange($event)">
+            <option value="" disabled>Select Room Type</option>
+            <option *ngFor="let rt of roomTypes" [value]="rt.id">{{ rt.name }}</option>
+        </select>
+        <input [(ngModel)]="selectedRoom.capacity" name="editCapacity" type="number" min="1">
+        <input [(ngModel)]="selectedRoom.price" name="editPrice" type="number" step="0.01">
         <label>
             Available:
-            <input [(ngModel)]="selectedRoom!.available" name="editAvailable" type="checkbox">
+            <input [(ngModel)]="selectedRoom.available" name="editAvailable" type="checkbox">
         </label>
-        <input [(ngModel)]="selectedRoom!.roomTypeId" name="editRoomTypeId" type="number">
         <label>
             Amenities:
             <select multiple [(ngModel)]="selectedRoom.amenityIds" name="editAmenityIds">

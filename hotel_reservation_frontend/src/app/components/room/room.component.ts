@@ -28,7 +28,7 @@ export class RoomComponent implements OnInit {
     amenityIds: []
   };
 
-  roomTypes: RoomType[] = [];
+  roomTypes: any[] = [];
   amenities: Amenity[] = [];
 
   constructor(
@@ -60,7 +60,16 @@ export class RoomComponent implements OnInit {
   }
 
   createRoom(): void {
-    this.roomService.create(this.newRoom).subscribe(() => {
+    const roomRequest = {
+      roomNumber: this.newRoom.roomNumber,
+      type: this.newRoom.type, // <-- Make sure this is set!
+      capacity: this.newRoom.capacity,
+      price: this.newRoom.price,
+      available: this.newRoom.available,
+      roomTypeId: this.newRoom.roomTypeId,
+      amenityIds: this.newRoom.amenityIds
+    };
+    this.roomService.create(roomRequest).subscribe(() => {
       this.loadRooms();
       this.newRoom = {
         roomNumber: '',
@@ -74,9 +83,26 @@ export class RoomComponent implements OnInit {
     });
   }
 
+  onEditRoomTypeChange(event: any) {
+    const selectedId = event.target.value;
+    const selectedType = this.roomTypes.find(rt => rt.id == selectedId);
+    if (this.selectedRoom) {
+      this.selectedRoom.type = selectedType ? selectedType.name : '';
+    }
+  }
+
   updateRoom(): void {
     if (this.selectedRoom && this.selectedRoom.id) {
-      this.roomService.update(this.selectedRoom.id, this.selectedRoom).subscribe(() => {
+      const roomRequest = {
+        roomNumber: this.selectedRoom.roomNumber,
+        type: this.selectedRoom.type,
+        capacity: this.selectedRoom.capacity,
+        price: this.selectedRoom.price,
+        available: this.selectedRoom.available,
+        roomTypeId: this.selectedRoom.roomTypeId,
+        amenityIds: this.selectedRoom.amenityIds
+      };
+      this.roomService.update(this.selectedRoom.id, roomRequest).subscribe(() => {
         this.loadRooms();
         this.selectedRoom = null;
       });
@@ -85,5 +111,11 @@ export class RoomComponent implements OnInit {
 
   deleteRoom(id: number): void {
     this.roomService.delete(id).subscribe(() => this.loadRooms());
+  }
+
+  onRoomTypeChange(event: any) {
+    const selectedId = event.target.value;
+    const selectedType = this.roomTypes.find(rt => rt.id == selectedId);
+    this.newRoom.type = selectedType ? selectedType.name : '';
   }
 }

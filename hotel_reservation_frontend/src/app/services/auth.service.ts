@@ -15,3 +15,5 @@ export class AuthService {
         return this.http.post(`${this.apiUrl}/register`, { email, password, name }, { responseType: 'text' });
     }
 }
+
+

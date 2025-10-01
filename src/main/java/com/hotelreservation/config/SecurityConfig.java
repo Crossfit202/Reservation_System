@@ -36,10 +36,10 @@ public class SecurityConfig {
                         // Only managers can access/edit everything
                         .requestMatchers("/api/rooms/**", "/api/amenities/**", "/api/room-types/**", "/api/payments/**",
                                 "/api/users/**", "/api/roles/**")
-                        .hasRole("MANAGER")
+                        .hasAuthority("ADMIN")
                         // Regular users can book rooms (reservations)
                         .requestMatchers("/api/reservations/**")
-                        .hasAnyRole("USER", "MANAGER")
+                        .hasAnyAuthority("USER", "ADMIN")
                         // Allow login/register endpoints without auth
                         .requestMatchers("/api/auth/**").permitAll()
                         .anyRequest().authenticated())

@@ -11,19 +11,19 @@ import java.util.stream.Collectors;
 
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
-    @Autowired
-    private UserRepository userRepository;
+        @Autowired
+        private UserRepository userRepository;
 
-    @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        AppUser user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        @Override
+        public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+                AppUser user = userRepository.findByEmail(email)
+                                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
-        return new org.springframework.security.core.userdetails.User(
-                user.getEmail(),
-                user.getPassword(),
-                user.getRoles().stream()
-                        .map(role -> new SimpleGrantedAuthority("ROLE_" + role.getName()))
-                        .collect(Collectors.toList()));
-    }
+                return new org.springframework.security.core.userdetails.User(
+                                user.getEmail(),
+                                user.getPassword(),
+                                user.getRoles().stream()
+                                                .map(role -> new SimpleGrantedAuthority(role.getName()))
+                                                .collect(Collectors.toList()));
+        }
 }
