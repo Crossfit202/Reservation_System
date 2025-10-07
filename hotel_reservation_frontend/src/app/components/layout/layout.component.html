@@ -1,0 +1,9 @@
+<div class="svg-bg-container">
+    <img *ngFor="let deco of svgDecorations" [src]="deco.src" class="svg-bg" [ngClass]="deco.animationClass"
+        [style.top]="deco.top" [style.left]="deco.left" [style.width]="deco.size" [style.height]="deco.size" alt=""
+        draggable="false" />
+</div>
+<div class="main-content">
+    <app-header></app-header>
+    <ng-content></ng-content>
+</div>

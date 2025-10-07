@@ -1,0 +1,70 @@
+.svg-bg-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.svg-bg {
+    position: absolute;
+    opacity: 0.1;
+    filter: grayscale(1) brightness(1.5);
+    pointer-events: none;
+    user-select: none;
+    z-index: 0;
+}
+
+
+@keyframes fadeInOut {
+
+    0%,
+    100% {
+        opacity: 0;
+    }
+
+    10%,
+    90% {
+        opacity: 0.1;
+    }
+
+    50% {
+        opacity: 0.15;
+    }
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes float {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-30px);
+    }
+}
+
+.fade-animation {
+    animation: fadeInOut 6s ease-in-out infinite;
+}
+
+.spin-animation {
+    animation: spin 8s linear infinite;
+}
+
+.float-animation {
+    animation: float 5s ease-in-out infinite;
+}
