@@ -47,69 +47,92 @@ export class LayoutComponent implements OnInit {
 
   generateSvgDecorations() {
     const iconsToShow = 20;
-    const gridRows = 5;
-    const gridColsPerSide = Math.ceil(iconsToShow / (2 * gridRows));
     const screenWidth = window.innerWidth;
     const screenHeight = window.innerHeight;
-    const contentWidth = 1200;
-    const centerStart = (screenWidth - contentWidth) / 2;
-    const centerEnd = centerStart + contentWidth;
-    const cellHeight = screenHeight / gridRows;
-    const leftCellWidth = centerStart / gridColsPerSide;
-    const rightCellWidth = (screenWidth - centerEnd) / gridColsPerSide;
+    const minDistance = 90; // Minimum distance between icons in px
 
-    const slots: { top: number, left: number }[] = [];
+    // Define the exclusion zone (center 1000x900px)
+    const exclusionZone = {
+      left: (screenWidth / 2) - 500,
+      top: (screenHeight / 2) - 300,
+      right: (screenWidth / 2) + 500,
+      bottom: (screenHeight / 2) + 450
+    };
 
-    // Left side grid
-    for (let row = 0; row < gridRows; row++) {
-      for (let col = 0; col < gridColsPerSide; col++) {
-        const top = row * cellHeight + Math.random() * (cellHeight - 100);
-        const left = col * leftCellWidth + Math.random() * (leftCellWidth - 100);
-        slots.push({ top, left });
+    const decorations: SvgDecoration[] = [];
+
+    for (let i = 0; i < iconsToShow; i++) {
+      let placed = false;
+      let attempts = 0;
+      let size = 80 + Math.random() * 100;
+      let maxTop = screenHeight - size;
+      let maxLeft = screenWidth - size;
+      let top = 0;
+      let left = 0;
+
+      while (!placed && attempts < 100) {
+        size = 80 + Math.random() * 100;
+        maxTop = screenHeight - size;
+        maxLeft = screenWidth - size;
+        top = Math.random() * maxTop;
+        left = Math.random() * maxLeft;
+
+        // Check for overlap or being too close to existing icons
+        const tooClose = decorations.some(deco => {
+          const decoTop = parseFloat(deco.top);
+          const decoLeft = parseFloat(deco.left);
+          const decoSize = parseFloat(deco.size);
+
+          const center1 = { x: left + size / 2, y: top + size / 2 };
+          const center2 = { x: decoLeft + decoSize / 2, y: decoTop + decoSize / 2 };
+          const distance = Math.hypot(center1.x - center2.x, center1.y - center2.y);
+
+          // Minimum distance is half the sum of sizes plus buffer
+          return distance < ((size + decoSize) / 2 + minDistance);
+        });
+
+        // Check if icon overlaps with the exclusion zone
+        const overlapsExclusionZone =
+          left + size > exclusionZone.left &&
+          left < exclusionZone.right &&
+          top + size > exclusionZone.top &&
+          top < exclusionZone.bottom;
+
+        if (!tooClose && !overlapsExclusionZone) {
+          placed = true;
+        }
+        attempts++;
       }
-    }
-    // Right side grid
-    for (let row = 0; row < gridRows; row++) {
-      for (let col = 0; col < gridColsPerSide; col++) {
-        const top = row * cellHeight + Math.random() * (cellHeight - 100);
-        const left = centerEnd + col * rightCellWidth + Math.random() * (rightCellWidth - 100);
-        slots.push({ top, left });
-      }
-    }
 
-    // Shuffle and pick only as many as needed
-    const shuffle = <T>(arr: T[]) => arr.sort(() => Math.random() - 0.5);
-    const allSlots = shuffle(slots).slice(0, iconsToShow);
-
-    this.svgDecorations = allSlots.map((slot, i) => {
-      const size = 80 + Math.random() * 100;
-      return {
+      decorations.push({
         src: `assets/${this.svgFiles[i % this.svgFiles.length]}`,
-        top: `${slot.top}px`,
-        left: `${slot.left}px`,
+        top: `${top}px`,
+        left: `${left}px`,
         size: `${size}px`,
         animationClass: ''
-      };
-    });
+      });
+    }
+
+    this.svgDecorations = decorations;
   }
 
   animateRandomSvgs() {
     // Remove all animation classes
     this.svgDecorations.forEach(deco => deco.animationClass = '');
 
-    // Pick 3 unique random indices
-    const indices = new Set<number>();
-    while (indices.size < 3 && indices.size < this.svgDecorations.length) {
-      indices.add(Math.floor(Math.random() * this.svgDecorations.length));
-    }
+    // // Pick 3 unique random indices
+    // const indices = new Set<number>();
+    // while (indices.size < 3 && indices.size < this.svgDecorations.length) {
+    //   indices.add(Math.floor(Math.random() * this.svgDecorations.length));
+    // }
 
-    // Assign a random animation class to each selected SVG
-    Array.from(indices).forEach(idx => {
-      const randomClass = this.animationClasses[Math.floor(Math.random() * this.animationClasses.length)];
-      this.svgDecorations[idx].animationClass = randomClass;
-    });
+    // // Assign a random animation class to each selected SVG
+    // Array.from(indices).forEach(idx => {
+    //   const randomClass = this.animationClasses[Math.floor(Math.random() * this.animationClasses.length)];
+    //   this.svgDecorations[idx].animationClass = randomClass;
+    // });
 
-    // Force Angular to update the view
-    this.svgDecorations = [...this.svgDecorations];
+    // // Force Angular to update the view
+    // this.svgDecorations = [...this.svgDecorations];
   }
 }

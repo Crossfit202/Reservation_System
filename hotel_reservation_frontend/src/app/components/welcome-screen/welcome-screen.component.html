@@ -1,19 +1,21 @@
 <div class="welcome-container">
-    <h1>
-        Welcome to BookEase!
-        <span class="welcome-user">
-            Welcome {{ userEmail ? userEmail : 'Guest' }}
-        </span>
-    </h1>
-    <p class="subtitle">
-        Book your perfect stay with ease. Discover luxury, comfort, and convenience.
-    </p>
-    <div class="actions">
-        <a routerLink="/rooms" class="btn">Browse Rooms</a>
-        <a routerLink="/reservations" class="btn">My Reservations</a>
-        <a routerLink="/amenities" class="btn">Amenities</a>
-        <a routerLink="/login" class="btn" *ngIf="!userEmail">Login</a>
-        <a routerLink="/register" class="btn" *ngIf="!userEmail">Register</a>
+    <div class="text">
+        <h1>
+            Welcome to BookEase!
+            <span class="welcome-user">
+                Welcome {{ userEmail ? userEmail : 'Guest' }}
+            </span>
+        </h1>
+        <p class="subtitle">
+            Book your perfect stay with ease. Discover luxury, comfort, and convenience.
+        </p>
+        <div class="actions">
+            <a routerLink="/rooms" class="btn">Browse Rooms</a>
+            <a routerLink="/reservations" class="btn">My Reservations</a>
+            <a routerLink="/amenities" class="btn">Amenities</a>
+            <a routerLink="/login" class="btn" *ngIf="!userEmail">Login</a>
+            <a routerLink="/register" class="btn" *ngIf="!userEmail">Register</a>
+        </div>
     </div>
     <div class="hero-image-container">
         <img src="assets/lobby.jpg" alt="Hotel" class="hero-image" />
