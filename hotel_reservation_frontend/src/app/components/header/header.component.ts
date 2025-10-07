@@ -1,15 +1,15 @@
 import { Component } from '@angular/core';
-import { HeaderComponent } from './components/header/header.component';
-import { Router, RouterOutlet } from '@angular/router'; // <-- Import this
+import { RouterModule, Router } from '@angular/router';
+import { CommonModule } from '@angular/common';
 
 @Component({
-  selector: 'app-root',
+  selector: 'app-header',
   standalone: true,
-  imports: [HeaderComponent, RouterOutlet], // <-- Add RouterOutlet here
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  imports: [RouterModule, CommonModule],
+  templateUrl: './header.component.html',
+  styleUrls: ['./header.component.css']
 })
-export class AppComponent {
+export class HeaderComponent {
   menuOpen = false;
   userEmail: string | null = null;
 

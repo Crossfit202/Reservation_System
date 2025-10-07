@@ -1,7 +1,32 @@
 /* welcome.component.css */
 
+.svg-bg-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.svg-bg {
+    position: absolute;
+    opacity: 0.1;
+    filter: grayscale(1) brightness(1.5);
+    pointer-events: none;
+    user-select: none;
+    z-index: 0;
+}
+
+/* Ensure main content is above SVGs */
 .welcome-container {
-    max-width: 900px;
+    position: relative;
+    z-index: 1;
+}
+
+.welcome-container {
+    max-width: 1200px;
     margin: 0 auto;
     padding: 4rem 1.5rem;
     text-align: center;
@@ -59,3 +84,56 @@
     border-radius: 10px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
 }
+
+@keyframes fadeInOut {
+
+    0%,
+    100% {
+        opacity: 0;
+    }
+
+    10%,
+    90% {
+        opacity: 0.1;
+    }
+
+    50% {
+        opacity: 0.15;
+    }
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes float {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-30px);
+    }
+}
+
+.fade-animation {
+    animation: fadeInOut 6s ease-in-out infinite;
+}
+
+.spin-animation {
+    animation: spin 8s linear infinite;
+}
+
+.float-animation {
+    animation: float 5s ease-in-out infinite;
+}
+
+/* You can combine animations using multiple classes or inline styles */

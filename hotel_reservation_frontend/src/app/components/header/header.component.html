@@ -1,0 +1,27 @@
+<header class="main-header">
+    <div class="header-content">
+        <button class="hamburger" [class.open]="menuOpen" (click)="toggleMenu()" aria-label="Open navigation">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+        <div class="spacer"></div>
+        <a routerLink="/" class="logo-link">
+            <img src="assets/text_logo.png" alt="BookEase Logo" class="logo-img" />
+        </a>
+        <div class="spacer"></div>
+        <nav class="nav-drawer" [class.open]="menuOpen">
+            <a routerLink="/" (click)="closeMenu()">Home</a>
+            <a routerLink="/rooms" (click)="closeMenu()">Rooms</a>
+            <a routerLink="/reservations" (click)="closeMenu()">Reservations</a>
+            <a routerLink="/amenities" (click)="closeMenu()">Amenities</a>
+            <a routerLink="/users" (click)="closeMenu()">Users</a>
+            <a routerLink="/payments" (click)="closeMenu()">Payments</a>
+            <a routerLink="/room-types" (click)="closeMenu()">Room Types</a>
+            <a routerLink="/roles" (click)="closeMenu()">Roles</a>
+            <a routerLink="/login" (click)="closeMenu()" *ngIf="!userEmail">Login</a>
+            <a routerLink="/register" (click)="closeMenu()" *ngIf="!userEmail">Register</a>
+            <button *ngIf="userEmail" class="btn signout-btn" (click)="signOut()">Sign Out</button>
+        </nav>
+    </div>
+</header>

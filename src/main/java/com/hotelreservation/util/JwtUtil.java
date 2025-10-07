@@ -18,6 +18,7 @@ public class JwtUtil {
     private String SECRET_KEY;
     private final long EXPIRATION_TIME = 86400000;
 
+    @SuppressWarnings("deprecation")
     public String generateToken(AppUser user) {
         return Jwts.builder()
                 .setSubject(user.getEmail())
@@ -39,6 +40,7 @@ public class JwtUtil {
         return claimsResolver.apply(claims);
     }
 
+    @SuppressWarnings("deprecation")
     private Claims extractAllClaims(String token) {
         return Jwts.parser()
                 .setSigningKey(SECRET_KEY)

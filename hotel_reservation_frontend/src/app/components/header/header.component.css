@@ -1,0 +1,123 @@
+.main-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 64px;
+    background: #fff;
+    box-shadow: 0 2px 8px rgba(44, 62, 80, 0.07);
+    z-index: 100;
+    display: flex;
+    align-items: center;
+}
+
+.header-content {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    height: 100%;
+    padding: 0 1.5rem;
+    position: relative;
+    justify-content: center;
+    /* Center children horizontally */
+}
+
+.logo-link {
+    order: 3;
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    justify-content: center;
+    flex: 0 0 auto;
+}
+
+.logo-img {
+    height: 140px;
+    width: auto;
+}
+
+.hamburger {
+    order: 1;
+    width: 40px;
+    height: 40px;
+    background: none;
+    border: none;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 6px;
+    cursor: pointer;
+    z-index: 110;
+}
+
+.hamburger span {
+    display: block;
+    height: 4px;
+    width: 28px;
+    background: #2c3e50;
+    border-radius: 2px;
+    transition: all 0.3s;
+}
+
+.hamburger.open span:nth-child(1) {
+    transform: translateY(10px) rotate(45deg);
+}
+
+.hamburger.open span:nth-child(2) {
+    opacity: 0;
+}
+
+.hamburger.open span:nth-child(3) {
+    transform: translateY(-10px) rotate(-45deg);
+}
+
+.nav-drawer {
+    position: fixed;
+    top: 64px;
+    left: 0;
+    /* Drawer now comes from the left */
+    width: 220px;
+    background: #fff;
+    box-shadow: 2px 0 8px rgba(44, 62, 80, 0.07);
+    /* shadow on the right side */
+    height: calc(100vh - 64px);
+    display: flex;
+    flex-direction: column;
+    padding: 1.5rem 1rem;
+    gap: 1rem;
+    transform: translateX(-100%);
+    /* Hide to the left */
+    transition: transform 0.3s;
+    z-index: 105;
+    order: 4;
+}
+
+.nav-drawer.open {
+    transform: translateX(0);
+    /* Slide in from the left */
+}
+
+.nav-drawer a,
+.nav-drawer .btn {
+    color: #2c3e50;
+    text-decoration: none;
+    font-size: 1.1rem;
+    padding: 0.5rem 0;
+    border: none;
+    background: none;
+    text-align: left;
+    cursor: pointer;
+}
+
+.nav-drawer .btn.signout-btn {
+    color: #fff;
+    background: #007bff;
+    border-radius: 5px;
+    padding: 0.5rem 1rem;
+    margin-top: 1rem;
+}
+
+.spacer {
+    flex: 1 1 0;
+    order: 2;
+}

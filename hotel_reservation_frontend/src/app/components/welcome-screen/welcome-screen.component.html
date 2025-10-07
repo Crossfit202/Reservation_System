@@ -16,10 +16,15 @@
         <a routerLink="/amenities" class="btn">Amenities</a>
         <a routerLink="/login" class="btn" *ngIf="!userEmail">Login</a>
         <a routerLink="/register" class="btn" *ngIf="!userEmail">Register</a>
-        <button *ngIf="userEmail" class="btn" (click)="signOut()">Sign Out</button>
     </div>
 
     <div class="hero-image-container">
         <img src="assets/lobby.jpg" alt="Hotel" class="hero-image" />
+    </div>
+
+    <div class="svg-bg-container">
+        <img *ngFor="let deco of svgDecorations" [src]="deco.src" class="svg-bg" [ngClass]="deco.animationClass"
+            [style.top]="deco.top" [style.left]="deco.left" [style.width]="deco.size" [style.height]="deco.size" alt=""
+            draggable="false" />
     </div>
 </div>
