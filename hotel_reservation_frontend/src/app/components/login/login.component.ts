@@ -20,7 +20,7 @@ export class LoginComponent {
   login() {
     this.auth.login(this.email, this.password).subscribe({
       next: (token: string) => {
-        localStorage.setItem('jwt', token);
+        this.auth.setJwt(token);
         this.router.navigate(['/']);
       },
       error: () => this.error = 'Invalid credentials'

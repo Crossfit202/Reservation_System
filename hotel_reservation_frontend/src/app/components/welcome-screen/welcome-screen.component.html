@@ -1,7 +1,7 @@
 <div class="welcome-container">
     <div class="text">
         <h1>
-            Welcome to BookEase!
+            Welcome to Paradise!
             <span class="welcome-user">
                 Welcome {{ userEmail ? userEmail : 'Guest' }}
             </span>
@@ -12,12 +12,9 @@
         <div class="actions">
             <a routerLink="/rooms" class="btn">Browse Rooms</a>
             <a routerLink="/reservations" class="btn">My Reservations</a>
-            <a routerLink="/amenities" class="btn">Amenities</a>
-            <a routerLink="/login" class="btn" *ngIf="!userEmail">Login</a>
-            <a routerLink="/register" class="btn" *ngIf="!userEmail">Register</a>
         </div>
     </div>
     <div class="hero-image-container">
-        <img src="assets/lobby.jpg" alt="Hotel" class="hero-image" />
+        <img src="assets/exterior.jpg" alt="Hotel" class="hero-image" />
     </div>
 </div>

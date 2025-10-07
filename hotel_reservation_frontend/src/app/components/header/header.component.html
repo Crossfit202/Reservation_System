@@ -5,11 +5,6 @@
             <span></span>
             <span></span>
         </button>
-        <div class="spacer"></div>
-        <a routerLink="/" class="logo-link">
-            <img src="assets/text_logo.png" alt="BookEase Logo" class="logo-img" />
-        </a>
-        <div class="spacer"></div>
         <nav class="nav-drawer" [class.open]="menuOpen">
             <a routerLink="/" (click)="closeMenu()">Home</a>
             <a routerLink="/rooms" (click)="closeMenu()">Rooms</a>
@@ -23,5 +18,9 @@
             <a routerLink="/register" (click)="closeMenu()" *ngIf="!userEmail">Register</a>
             <button *ngIf="userEmail" class="btn signout-btn" (click)="signOut()">Sign Out</button>
         </nav>
+        <div class="spacer"></div>
+        <a routerLink="/" class="logo-link">
+            <img src="assets/logo.png" alt="Paradise Hotel Logo" class="logo-img" />
+        </a>
     </div>
 </header>

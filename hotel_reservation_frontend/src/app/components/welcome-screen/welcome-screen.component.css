@@ -66,7 +66,6 @@ body {
 
 .hero-image-container {
     margin-top: 1rem;
-    /* Reduced */
     width: 100%;
     display: flex;
     justify-content: center;
@@ -74,10 +73,10 @@ body {
 
 .hero-image {
     width: 100%;
-    max-width: 1000px;
+    max-width: 850px;
     border-radius: 10px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
     height: auto;
     max-height: 40vh;
-    object-fit: cover;
+    object-fit: fill;
 }

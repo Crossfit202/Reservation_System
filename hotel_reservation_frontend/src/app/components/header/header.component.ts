@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
-import { RouterModule, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-header',
@@ -13,16 +15,10 @@ export class HeaderComponent {
   menuOpen = false;
   userEmail: string | null = null;
 
-  constructor(private router: Router) {
-    const token = localStorage.getItem('jwt');
-    if (token) {
-      try {
-        const payload = JSON.parse(atob(token.split('.')[1]));
-        this.userEmail = payload.sub;
-      } catch (e) {
-        this.userEmail = null;
-      }
-    }
+  constructor(private router: Router, private authService: AuthService) {
+    this.authService.userEmail$.subscribe(email => {
+      this.userEmail = email;
+    });
   }
 
   toggleMenu() {
@@ -34,8 +30,8 @@ export class HeaderComponent {
   }
 
   signOut() {
-    localStorage.removeItem('jwt');
-    this.userEmail = null;
+    this.authService.signOut();
+    this.closeMenu();
     this.router.navigate(['/login']);
   }
 }

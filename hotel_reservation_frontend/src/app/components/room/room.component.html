@@ -1,68 +1,86 @@
-<h2>Rooms</h2>
-<ul>
-    <li *ngFor="let room of rooms">
-        Number: {{ room.roomNumber }} |
-        Type: {{ room.type }} |
-        Capacity: {{ room.capacity }} |
-        Price: {{ room.price }} |
-        Available: {{ room.available ? 'Yes' : 'No' }} |
-        Room Type ID: {{ room.roomTypeId }}
-        <br>
-        Amenities:
-        <span *ngIf="room.amenitiesSet?.length; else noAmenities">
-            <span *ngFor="let amenity of room.amenitiesSet; let last = last">
-                {{ amenity.name }}<span *ngIf="!last">, </span>
-            </span>
-        </span>
-        <ng-template #noAmenities>None</ng-template>
-        <button (click)="selectRoom(room)">Edit</button>
-        <button (click)="deleteRoom(room.id!)">Delete</button>
-    </li>
-</ul>
+<div class="rooms-container">
+    <div class="rooms-content">
+        <div class="rooms-list">
+            <h2>Rooms</h2>
+            <ul>
+                <li *ngFor="let room of rooms">
+                    <div class="room-info">
+                        <strong>#{{ room.roomNumber }}</strong> | {{ room.type }} | {{ room.capacity }} guests | ${{
+                        room.price }} |
+                        <span [class.available]="room.available" [class.unavailable]="!room.available">
+                            {{ room.available ? 'Available' : 'Unavailable' }}
+                        </span>
+                        <br>
+                        <small>
+                            Amenities:
+                            <span *ngIf="room.amenitiesSet?.length; else noAmenities">
+                                <span *ngFor="let amenity of room.amenitiesSet; let last = last">
+                                    {{ amenity.name }}<span *ngIf="!last">, </span>
+                                </span>
+                            </span>
+                            <ng-template #noAmenities>None</ng-template>
+                        </small>
+                    </div>
+                    <div class="room-actions">
+                        <button (click)="selectRoom(room)">Edit</button>
+                        <button (click)="deleteRoom(room.id!)">Delete</button>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <div class="room-form">
+            <h3 *ngIf="!selectedRoom">Add Room</h3>
+            <h3 *ngIf="selectedRoom">Edit Room</h3>
+            <form *ngIf="!selectedRoom" (ngSubmit)="createRoom()">
+                <input id="roomNumber" [(ngModel)]="newRoom.roomNumber" name="roomNumber" placeholder="Room Number"
+                    required>
 
-<h3>Add Room</h3>
-<form (ngSubmit)="createRoom()">
-    <input [(ngModel)]="newRoom.roomNumber" name="roomNumber" placeholder="Room Number" required>
-    <select [(ngModel)]="newRoom.roomTypeId" name="roomTypeId" (change)="onRoomTypeChange($event)">
-        <option value="" disabled selected>Select Room Type</option>
-        <option *ngFor="let rt of roomTypes" [value]="rt.id">{{ rt.name }}</option>
-    </select>
-    <input [(ngModel)]="newRoom.capacity" name="capacity" type="number" min="1" placeholder="Capacity">
-    <input [(ngModel)]="newRoom.price" name="price" type="number" step="0.01" placeholder="Price">
-    <label>
-        Available:
-        <input [(ngModel)]="newRoom.available" name="available" type="checkbox">
-    </label>
-    <label>
-        Amenities:
-        <select multiple [(ngModel)]="newRoom.amenityIds" name="amenityIds">
-            <option *ngFor="let amenity of amenities" [value]="amenity.id">{{ amenity.name }}</option>
-        </select>
-    </label>
-    <button type="submit">Add</button>
-</form>
+                <select id="roomTypeId" [(ngModel)]="newRoom.roomTypeId" name="roomTypeId"
+                    (change)="onRoomTypeChange($event)" required>
+                    <option value="" disabled selected>Select Room Type</option>
+                    <option *ngFor="let rt of roomTypes" [value]="rt.id">{{ rt.name }}</option>
+                </select>
 
-<div *ngIf="selectedRoom">
-    <h3>Edit Room</h3>
-    <form (ngSubmit)="updateRoom()">
-        <input [(ngModel)]="selectedRoom.roomNumber" name="editRoomNumber" required>
-        <select [(ngModel)]="selectedRoom.roomTypeId" name="editRoomTypeId" (change)="onEditRoomTypeChange($event)">
-            <option value="" disabled>Select Room Type</option>
-            <option *ngFor="let rt of roomTypes" [value]="rt.id">{{ rt.name }}</option>
-        </select>
-        <input [(ngModel)]="selectedRoom.capacity" name="editCapacity" type="number" min="1">
-        <input [(ngModel)]="selectedRoom.price" name="editPrice" type="number" step="0.01">
-        <label>
-            Available:
-            <input [(ngModel)]="selectedRoom.available" name="editAvailable" type="checkbox">
-        </label>
-        <label>
-            Amenities:
-            <select multiple [(ngModel)]="selectedRoom.amenityIds" name="editAmenityIds">
-                <option *ngFor="let amenity of amenities" [value]="amenity.id">{{ amenity.name }}</option>
-            </select>
-        </label>
-        <button type="submit">Update</button>
-        <button type="button" (click)="selectedRoom = null">Cancel</button>
-    </form>
+                <input id="capacity" [(ngModel)]="newRoom.capacity" name="capacity" type="number" min="1"
+                    placeholder="Capacity" required>
+
+                <input id="price" [(ngModel)]="newRoom.price" name="price" type="number" step="0.01" placeholder="Price"
+                    required>
+
+                <div>
+                    <input [(ngModel)]="newRoom.available" name="available" type="checkbox" id="available">
+                    <label for="available">Available</label>
+                </div>
+
+                <select id="amenityIds" multiple [(ngModel)]="newRoom.amenityIds" name="amenityIds">
+                    <option value="" disabled>Select Amenities</option>
+                    <option *ngFor="let amenity of amenities" [value]="amenity.id">{{ amenity.name }}</option>
+                </select>
+
+                <button type="submit">Add</button>
+            </form>
+            <form *ngIf="selectedRoom" (ngSubmit)="updateRoom()">
+                <input [(ngModel)]="selectedRoom.roomNumber" name="editRoomNumber" placeholder="Room Number" required>
+                <select [(ngModel)]="selectedRoom.roomTypeId" name="editRoomTypeId"
+                    (change)="onEditRoomTypeChange($event)" required>
+                    <option value="" disabled>Select Room Type</option>
+                    <option *ngFor="let rt of roomTypes" [value]="rt.id">{{ rt.name }}</option>
+                </select>
+                <input [(ngModel)]="selectedRoom.capacity" name="editCapacity" type="number" min="1"
+                    placeholder="Capacity" required>
+                <input [(ngModel)]="selectedRoom.price" name="editPrice" type="number" step="0.01" placeholder="Price"
+                    required>
+                <div>
+                    <input [(ngModel)]="selectedRoom.available" name="editAvailable" type="checkbox" id="editAvailable">
+                    <label for="editAvailable">Available</label>
+                </div>
+                <select multiple [(ngModel)]="selectedRoom.amenityIds" name="editAmenityIds">
+                    <option value="" disabled>Select Amenities</option>
+                    <option *ngFor="let amenity of amenities" [value]="amenity.id">{{ amenity.name }}</option>
+                </select>
+                <button type="submit">Update</button>
+                <button type="button" (click)="selectedRoom = null">Cancel</button>
+            </form>
+        </div>
+    </div>
 </div>

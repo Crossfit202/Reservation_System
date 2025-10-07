@@ -11,7 +11,7 @@
 .svg-bg {
     position: absolute;
     opacity: 0.1;
-    filter: grayscale(1) brightness(1.5);
+    color: #009058;
     pointer-events: none;
     user-select: none;
     z-index: 0;

@@ -24,7 +24,7 @@ export class LayoutComponent implements OnInit {
     'breakfast-hot-drink-coffee-svgrepo-com.svg',
     'luggage-svgrepo-com.svg',
     'pillow-svgrepo-com.svg',
-    'stars-1-svgrepo-com.svg',
+    'palm-tree.svg',
     'swimming-svgrepo-com.svg',
     'tv-monitor-svgrepo-com.svg'
   ];
