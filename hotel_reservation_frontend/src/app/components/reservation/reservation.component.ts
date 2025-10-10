@@ -39,6 +39,7 @@ export class ReservationComponent implements OnInit {
 
   toastMessage: string = '';
   toastTimeout: any;
+  errorMessage: string = '';
 
   constructor(
     private reservationService: ReservationService,
@@ -145,6 +146,13 @@ export class ReservationComponent implements OnInit {
   }
 
   createReservation(): void {
+    this.errorMessage = '';
+    // Find the selected room's capacity
+    const selectedRoom = this.rooms.find(r => r.id === this.newReservation.roomId);
+    if (selectedRoom && selectedRoom.capacity !== undefined && this.newReservation.numGuests > selectedRoom.capacity) {
+      this.errorMessage = `Cannot reserve for more than ${selectedRoom.capacity} guests in this room.`;
+      return;
+    }
     this.reservationService.create(this.newReservation).subscribe(() => {
       this.loadReservations();
       this.newReservation = {

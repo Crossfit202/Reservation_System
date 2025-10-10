@@ -1,98 +1,124 @@
-<!-- Toast message -->
-<div *ngIf="toastMessage" class="toast-message">
-    {{ toastMessage }}
-</div>
-<!-- ADMIN: Show both list and add form -->
-<ng-container *ngIf="isAdmin">
-    <h2>Reservations</h2>
-    <ul>
-        <li *ngFor="let reservation of reservations">
-            User: {{ reservation.appUserName }} ({{ reservation.appUserEmail }}) |
-            Room: {{ reservation.roomNumber }} ({{ reservation.roomType }}) |
-            Check-in: {{ reservation.checkIn }} |
-            Check-out: {{ reservation.checkOut }} |
-            Guests: {{ reservation.numGuests }} |
-            Status: {{ reservation.status }} |
-            Created: {{ reservation.createdAt }} |
-            Updated: {{ reservation.updatedAt }}
-            <button (click)="selectReservation(reservation)">Edit</button>
-            <button (click)="deleteReservation(reservation.id!)">Delete</button>
-        </li>
-    </ul>
-    <h3>Add Reservation</h3>
-    <form (ngSubmit)="createReservation()">
-        <select [(ngModel)]="newReservation.appUserId" name="appUserId" required>
-            <option value="" disabled selected>Select User</option>
-            <option *ngFor="let user of users" [value]="user.id">
-                {{ user.name || user.email || ('User ' + user.id) }}
-            </option>
-        </select>
-        <select [(ngModel)]="newReservation.roomId" name="roomId" required [disabled]="roomIdFromQuery !== null">
-            <option value="" disabled selected>Select Room</option>
-            <option *ngFor="let room of rooms" [value]="room.id">{{ room.roomNumber }}</option>
-        </select>
-        <input [(ngModel)]="newReservation.checkIn" name="checkIn" type="date" placeholder="Check-in" required>
-        <input [(ngModel)]="newReservation.checkOut" name="checkOut" type="date" placeholder="Check-out" required>
-        <input [(ngModel)]="newReservation.numGuests" name="numGuests" type="number" min="1" placeholder="Guests"
-            required>
-        <input [(ngModel)]="newReservation.status" name="status" placeholder="Status" required>
-        <button type="submit">Add</button>
-    </form>
-</ng-container>
+<div class="reservations-container">
+    <div class="reservations-content">
+        <!-- Toast message -->
+        <div *ngIf="toastMessage" class="toast-message">
+            {{ toastMessage }}
+        </div>
+        <div *ngIf="errorMessage" class="error-message">
+            {{ errorMessage }}
+        </div>
 
-<!-- USER: Only add form if roomIdFromQuery, only list if not -->
-<ng-container *ngIf="!isAdmin && roomIdFromQuery">
-    <h3>Add Reservation</h3>
-    <form (ngSubmit)="createReservation()">
-        <input type="text" [value]="currentUserDisplayName" disabled>
-        <select [(ngModel)]="newReservation.roomId" name="roomId" required [disabled]="roomIdFromQuery !== null">
-            <option value="" disabled selected>Select Room</option>
-            <option *ngFor="let room of rooms" [value]="room.id">{{ room.roomNumber }}</option>
-        </select>
-        <input [(ngModel)]="newReservation.checkIn" name="checkIn" type="date" placeholder="Check-in" required>
-        <input [(ngModel)]="newReservation.checkOut" name="checkOut" type="date" placeholder="Check-out" required>
-        <input [(ngModel)]="newReservation.numGuests" name="numGuests" type="number" min="1" placeholder="Guests"
-            required>
-        <button type="submit">Add</button>
-    </form>
-</ng-container>
+        <div class="reservations-list">
+            <!-- ADMIN: Show both list and add form -->
+            <ng-container *ngIf="isAdmin">
+                <h2>Reservations</h2>
+                <ul>
+                    <li *ngFor="let reservation of reservations">
+                        User: {{ reservation.appUserName }} ({{ reservation.appUserEmail }}) |
+                        Room: {{ reservation.roomNumber }} ({{ reservation.roomType }}) |
+                        Check-in: {{ reservation.checkIn }} |
+                        Check-out: {{ reservation.checkOut }} |
+                        Guests: {{ reservation.numGuests }} |
+                        Status: {{ reservation.status }} |
+                        Created: {{ reservation.createdAt }} |
+                        Updated: {{ reservation.updatedAt }}
+                        <div class="reservation-actions">
+                            <button (click)="selectReservation(reservation)">Edit</button>
+                            <button (click)="deleteReservation(reservation.id!)">Delete</button>
+                        </div>
+                    </li>
+                </ul>
+            </ng-container>
 
-<ng-container *ngIf="!isAdmin && !roomIdFromQuery">
-    <h2>Reservations</h2>
-    <ul>
-        <li *ngFor="let reservation of reservations">
-            User: {{ reservation.appUserName }} ({{ reservation.appUserEmail }}) |
-            Room: {{ reservation.roomNumber }} ({{ reservation.roomType }}) |
-            Check-in: {{ reservation.checkIn }} |
-            Check-out: {{ reservation.checkOut }} |
-            Guests: {{ reservation.numGuests }} |
-            Status: {{ reservation.status }} |
-            Created: {{ reservation.createdAt }} |
-            Updated: {{ reservation.updatedAt }}
-            <button (click)="selectReservation(reservation)">Edit</button>
-            <button (click)="deleteReservation(reservation.id!)">Delete</button>
-        </li>
-    </ul>
-</ng-container>
+            <!-- USER: Only list if not roomIdFromQuery -->
+            <ng-container *ngIf="!isAdmin && !roomIdFromQuery">
+                <h2>Reservations</h2>
+                <ul>
+                    <li *ngFor="let reservation of reservations">
+                        User: {{ reservation.appUserName }} ({{ reservation.appUserEmail }}) |
+                        Room: {{ reservation.roomNumber }} ({{ reservation.roomType }}) |
+                        Check-in: {{ reservation.checkIn }} |
+                        Check-out: {{ reservation.checkOut }} |
+                        Guests: {{ reservation.numGuests }} |
+                        Status: {{ reservation.status }} |
+                        Created: {{ reservation.createdAt }} |
+                        Updated: {{ reservation.updatedAt }}
+                        <!-- No edit/delete for USER -->
+                    </li>
+                </ul>
+            </ng-container>
+        </div>
 
-<div *ngIf="selectedReservation">
-    <h3>Edit Reservation</h3>
-    <form (ngSubmit)="updateReservation()">
-        <select [(ngModel)]="selectedReservation!.appUserId" name="editAppUserId" required>
-            <option value="" disabled>Select User</option>
-            <option *ngFor="let user of users" [value]="user.id">
-                {{ user.name || user.email || ('User ' + user.id) }}
-            </option>
-        </select>
-        <select [(ngModel)]="selectedReservation!.roomId" name="editRoomId" required>
-            <option value="" disabled>Select Room</option>
-            <option *ngFor="let room of rooms" [value]="room.id">{{ room.roomNumber }}</option>
-        </select>
-        <input [(ngModel)]="selectedReservation!.checkIn" name="editCheckIn" type="date" required>
-        <input [(ngModel)]="selectedReservation!.checkOut" name="editCheckOut" type="date" required>
-        <input [(ngModel)]="selectedReservation!.numGuests" name="editNumGuests" type="number" min="1" required>
-        <input [(ngModel)]="selectedReservation!.status" name="editStatus" required>
-        <button type="submit">Update</button>
-        <button type="button" (click)="selectedReservation = null">Cancel</button>
-    </form>
+        <div class="reservation-form">
+            <!-- ADMIN: Add form -->
+            <ng-container *ngIf="isAdmin">
+                <h3>Add Reservation</h3>
+                <form (ngSubmit)="createReservation()">
+                    <select [(ngModel)]="newReservation.appUserId" name="appUserId" required>
+                        <option value="" disabled selected>Select User</option>
+                        <option *ngFor="let user of users" [value]="user.id">
+                            {{ user.name || user.email || ('User ' + user.id) }}
+                        </option>
+                    </select>
+                    <select [(ngModel)]="newReservation.roomId" name="roomId" required
+                        [disabled]="roomIdFromQuery !== null">
+                        <option value="" disabled selected>Select Room</option>
+                        <option *ngFor="let room of rooms" [value]="room.id">{{ room.roomNumber }}</option>
+                    </select>
+                    <input [(ngModel)]="newReservation.checkIn" name="checkIn" type="date" placeholder="Check-in"
+                        required>
+                    <input [(ngModel)]="newReservation.checkOut" name="checkOut" type="date" placeholder="Check-out"
+                        required>
+                    <input [(ngModel)]="newReservation.numGuests" name="numGuests" type="number" min="1"
+                        placeholder="Guests" required>
+                    <input [(ngModel)]="newReservation.status" name="status" placeholder="Status" required>
+                    <button type="submit">Add</button>
+                </form>
+            </ng-container>
+
+            <!-- USER: Add form if roomIdFromQuery -->
+            <ng-container *ngIf="!isAdmin && roomIdFromQuery">
+                <h3>Add Reservation</h3>
+                <form (ngSubmit)="createReservation()">
+                    <input type="text" [value]="currentUserDisplayName" disabled>
+                    <select [(ngModel)]="newReservation.roomId" name="roomId" required
+                        [disabled]="roomIdFromQuery !== null">
+                        <option value="" disabled selected>Select Room</option>
+                        <option *ngFor="let room of rooms" [value]="room.id">{{ room.roomNumber }}</option>
+                    </select>
+                    <input [(ngModel)]="newReservation.checkIn" name="checkIn" type="date" placeholder="Check-in"
+                        required>
+                    <input [(ngModel)]="newReservation.checkOut" name="checkOut" type="date" placeholder="Check-out"
+                        required>
+                    <input [(ngModel)]="newReservation.numGuests" name="numGuests" type="number" min="1"
+                        placeholder="Guests" required>
+                    <button type="submit">Add</button>
+                </form>
+            </ng-container>
+
+            <!-- Edit Reservation Form -->
+            <div *ngIf="selectedReservation">
+                <h3>Edit Reservation</h3>
+                <form (ngSubmit)="updateReservation()">
+                    <select [(ngModel)]="selectedReservation!.appUserId" name="editAppUserId" required>
+                        <option value="" disabled>Select User</option>
+                        <option *ngFor="let user of users" [value]="user.id">
+                            {{ user.name || user.email || ('User ' + user.id) }}
+                        </option>
+                    </select>
+                    <select [(ngModel)]="selectedReservation!.roomId" name="editRoomId" required>
+                        <option value="" disabled>Select Room</option>
+                        <option *ngFor="let room of rooms" [value]="room.id">{{ room.roomNumber }}</option>
+                    </select>
+                    <input [(ngModel)]="selectedReservation!.checkIn" name="editCheckIn" type="date" required>
+                    <input [(ngModel)]="selectedReservation!.checkOut" name="editCheckOut" type="date" required>
+                    <input [(ngModel)]="selectedReservation!.numGuests" name="editNumGuests" type="number" min="1"
+                        required>
+                    <input [(ngModel)]="selectedReservation!.status" name="editStatus" required>
+                    <button type="submit">Update</button>
+                    <button type="button" (click)="selectedReservation = null">Cancel</button>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>
