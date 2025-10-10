@@ -9,11 +9,17 @@
             <a routerLink="/" (click)="closeMenu()">Home</a>
             <a routerLink="/rooms" (click)="closeMenu()">Rooms</a>
             <a routerLink="/reservations" (click)="closeMenu()">Reservations</a>
-            <a routerLink="/amenities" (click)="closeMenu()">Amenities</a>
-            <a routerLink="/users" (click)="closeMenu()">Users</a>
-            <a routerLink="/payments" (click)="closeMenu()">Payments</a>
-            <a routerLink="/room-types" (click)="closeMenu()">Room Types</a>
-            <a routerLink="/roles" (click)="closeMenu()">Roles</a>
+            <a routerLink="/payments" (click)="closeMenu()" *ngIf="userRole === 'USER'">Payments</a>
+            <a routerLink="" (click)="closeMenu()" *ngIf="userRole === 'USER'">Profile</a>
+            <!-- ADMIN links -->
+            <ng-container *ngIf="userRole === 'ADMIN'">
+                <a routerLink="/amenities" (click)="closeMenu()">Amenities</a>
+                <a routerLink="/users" (click)="closeMenu()">Users</a>
+                <a routerLink="/payments" (click)="closeMenu()">Payments</a>
+                <a routerLink="/room-types" (click)="closeMenu()">Room Types</a>
+                <a routerLink="/roles" (click)="closeMenu()">Roles</a>
+                <a routerLink="" (click)="closeMenu()">Profile</a>
+            </ng-container>
             <a routerLink="/login" (click)="closeMenu()" *ngIf="!userEmail">Login</a>
             <a routerLink="/register" (click)="closeMenu()" *ngIf="!userEmail">Register</a>
             <button *ngIf="userEmail" class="btn signout-btn" (click)="signOut()">Sign Out</button>

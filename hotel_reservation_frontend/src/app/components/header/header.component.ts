@@ -14,10 +14,14 @@ import { AuthService } from '../../services/auth.service';
 export class HeaderComponent {
   menuOpen = false;
   userEmail: string | null = null;
+  userRole: string | null = null;
 
   constructor(private router: Router, private authService: AuthService) {
     this.authService.userEmail$.subscribe(email => {
       this.userEmail = email;
+    });
+    this.authService.userRole$.subscribe(role => {
+      this.userRole = role;
     });
   }
 
