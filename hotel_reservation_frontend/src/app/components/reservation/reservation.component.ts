@@ -37,6 +37,9 @@ export class ReservationComponent implements OnInit {
   currentUserId: number | null = null;
   public roomIdFromQuery: number | null = null;
 
+  toastMessage: string = '';
+  toastTimeout: any;
+
   constructor(
     private reservationService: ReservationService,
     private appUserService: AppUserService,
@@ -154,7 +157,18 @@ export class ReservationComponent implements OnInit {
         createdAt: '',
         updatedAt: ''
       };
+      this.showToast('Reservation created successfully!');
     });
+  }
+
+  showToast(message: string) {
+    this.toastMessage = message;
+    if (this.toastTimeout) {
+      clearTimeout(this.toastTimeout);
+    }
+    this.toastTimeout = setTimeout(() => {
+      this.toastMessage = '';
+    }, 3000);
   }
 
   updateReservation(): void {

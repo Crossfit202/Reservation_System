@@ -1,3 +1,7 @@
+<!-- Toast message -->
+<div *ngIf="toastMessage" class="toast-message">
+    {{ toastMessage }}
+</div>
 <!-- ADMIN: Show both list and add form -->
 <ng-container *ngIf="isAdmin">
     <h2>Reservations</h2>
