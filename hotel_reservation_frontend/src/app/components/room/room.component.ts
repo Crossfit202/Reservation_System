@@ -7,6 +7,7 @@ import { RoomTypeService } from '../../services/room-type.service';
 import { RoomType } from '../../Models/room-type.model';
 import { Amenity } from '../../Models/amenity.model';
 import { AmenityService } from '../../services/amenity.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-room',
@@ -30,17 +31,22 @@ export class RoomComponent implements OnInit {
 
   roomTypes: any[] = [];
   amenities: Amenity[] = [];
+  isAdmin: boolean = false;
 
   constructor(
     private roomService: RoomService,
     private roomTypeService: RoomTypeService,
-    private amenityService: AmenityService
+    private amenityService: AmenityService,
+    private authService: AuthService // <-- Inject AuthService
   ) { }
 
   ngOnInit(): void {
     this.loadRooms();
     this.loadRoomTypes();
     this.loadAmenities();
+    this.authService.userRole$.subscribe(role => {
+      this.isAdmin = role === 'ADMIN';
+    });
   }
 
   loadRooms(): void {

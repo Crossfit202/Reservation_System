@@ -5,6 +5,9 @@
             <ul>
                 <li *ngFor="let room of rooms">
                     <div class="room-info">
+                        <img *ngIf="room.roomType?.imageName" [src]="'assets/room-types/' + room.roomType?.imageName"
+                            [alt]="room.roomType?.name || 'Room Type'"
+                            style="width:100px; height:auto; border-radius:8px; margin-bottom:8px;">
                         <strong>#{{ room.roomNumber }}</strong> | {{ room.type }} | {{ room.capacity }} guests | ${{
                         room.price }} |
                         <span [class.available]="room.available" [class.unavailable]="!room.available">
@@ -21,17 +24,17 @@
                             <ng-template #noAmenities>None</ng-template>
                         </small>
                     </div>
-                    <div class="room-actions">
+                    <div class="room-actions" *ngIf="isAdmin">
                         <button (click)="selectRoom(room)">Edit</button>
                         <button (click)="deleteRoom(room.id!)">Delete</button>
                     </div>
                 </li>
             </ul>
         </div>
-        <div class="room-form">
+        <div class="room-form" *ngIf="isAdmin || selectedRoom">
             <h3 *ngIf="!selectedRoom">Add Room</h3>
             <h3 *ngIf="selectedRoom">Edit Room</h3>
-            <form *ngIf="!selectedRoom" (ngSubmit)="createRoom()">
+            <form *ngIf="!selectedRoom && isAdmin" (ngSubmit)="createRoom()">
                 <input id="roomNumber" [(ngModel)]="newRoom.roomNumber" name="roomNumber" placeholder="Room Number"
                     required>
 

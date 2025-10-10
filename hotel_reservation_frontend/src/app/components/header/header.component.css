@@ -52,6 +52,12 @@
     z-index: 110;
 }
 
+.hamburger:hover {
+    border-radius: 50%;
+    box-shadow: 0 0 0 4px #0F976433;
+    transition: background 0.2s, border-radius 0.2s, box-shadow 0.2s;
+}
+
 .hamburger span {
     display: block;
     height: 4px;
@@ -104,16 +110,23 @@
     color: #2c3e50;
     text-decoration: none;
     font-size: 1.1rem;
-    padding: 0.5rem 0;
+    padding: 5px;
     border: none;
     background: none;
     text-align: left;
     cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+}
+
+.nav-drawer a:hover,
+.nav-drawer .btn:hover {
+    box-shadow: 0 2px 8px #0F9764;
+    border-radius: 4px;
 }
 
 .nav-drawer .btn.signout-btn {
     color: #fff;
-    background: #007bff;
+    background: #0F9764;
     border-radius: 5px;
     padding: 0.5rem 1rem;
     margin-top: 1rem;

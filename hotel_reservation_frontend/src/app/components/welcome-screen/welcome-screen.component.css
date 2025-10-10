@@ -51,7 +51,7 @@ body {
 }
 
 .btn {
-    background-color: #007bff;
+    background-color: #0F9764;
     color: white;
     padding: 0.8rem 1.5rem;
     text-decoration: none;
@@ -61,7 +61,7 @@ body {
 }
 
 .btn:hover {
-    background-color: #0056b3;
+    background-color: #035134;
 }
 
 .hero-image-container {

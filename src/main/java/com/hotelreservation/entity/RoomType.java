@@ -15,6 +15,8 @@ public class RoomType {
 
     private String description;
 
+    private String imageName;
+
     @OneToMany(mappedBy = "roomType")
     @JsonIgnore
     private List<Room> rooms;
@@ -42,6 +44,14 @@ public class RoomType {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getImageName() {
+        return imageName;
+    }
+
+    public void setImageName(String imageName) {
+        this.imageName = imageName;
     }
 
     public List<Room> getRooms() {

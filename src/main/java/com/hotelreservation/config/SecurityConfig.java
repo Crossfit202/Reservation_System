@@ -33,7 +33,7 @@ public class SecurityConfig {
                         // Only managers can access/edit everything
                         .requestMatchers("/api/rooms/**", "/api/amenities/**", "/api/room-types/**", "/api/payments/**",
                                 "/api/users/**", "/api/roles/**")
-                        .hasAuthority("ADMIN")
+                        .hasAnyAuthority("USER", "ADMIN")
                         // Regular users can book rooms (reservations)
                         .requestMatchers("/api/reservations/**")
                         .hasAnyAuthority("USER", "ADMIN")
