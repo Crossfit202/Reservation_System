@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ReservationService } from '../../services/reservation.service';
@@ -8,6 +9,8 @@ import { Room } from '../../Models/room.model';
 import { AppUserService } from '../../services/app-user.service';
 import { RoomService } from '../../services/room.service';
 
+import { AuthService } from '../../services/auth.service';
+
 @Component({
   selector: 'app-reservation',
   templateUrl: './reservation.component.html',
@@ -16,6 +19,7 @@ import { RoomService } from '../../services/room.service';
   imports: [CommonModule, FormsModule]
 })
 export class ReservationComponent implements OnInit {
+  isAdmin: boolean = false;
   reservations: Reservation[] = [];
   selectedReservation: Reservation | null = null;
   newReservation: Reservation = {
@@ -28,28 +32,105 @@ export class ReservationComponent implements OnInit {
     createdAt: '',
     updatedAt: ''
   };
-
   users: AppUser[] = [];
   rooms: Room[] = [];
+  currentUserId: number | null = null;
+  public roomIdFromQuery: number | null = null;
 
   constructor(
     private reservationService: ReservationService,
     private appUserService: AppUserService,
-    private roomService: RoomService
+    private roomService: RoomService,
+    private authService: AuthService,
+    public route: ActivatedRoute
   ) { }
+
+  get isCurrentUserLoaded(): boolean {
+    return this.currentUserId !== null && !!this.users.find((u: AppUser) => u.id === this.currentUserId);
+  }
+  get currentUserDisplayName(): string {
+    if (this.currentUserId !== null) {
+      const user = this.users.find((u: AppUser) => u.id === this.currentUserId);
+      return user?.name || user?.email || ('User ' + this.currentUserId);
+    }
+    return '';
+  }
 
   ngOnInit(): void {
     this.loadReservations();
     this.loadUsers();
     this.loadRooms();
+
+    // Get roomId from query params if present
+    this.route.queryParams.subscribe(params => {
+      const roomId = params['roomId'];
+      if (roomId) {
+        this.newReservation.roomId = +roomId;
+        this.roomIdFromQuery = +roomId;
+      }
+    });
+
+    // Get current user ID (assumes AuthService provides it via JWT or similar)
+    const userId = this.getCurrentUserId();
+    if (userId) {
+      this.newReservation.appUserId = userId;
+      this.currentUserId = userId;
+    }
+
+    // Set isAdmin from AuthService
+    this.authService.userRole$.subscribe(role => {
+      this.isAdmin = role === 'ADMIN';
+    });
+  }
+
+  getCurrentUserId(): number | null {
+    // Example: extract user ID from JWT (adjust as needed for your AuthService)
+    const token = localStorage.getItem('jwt');
+    if (token) {
+      try {
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        // Adjust the key if your JWT uses a different claim for user ID
+        return payload.userId || payload.id || null;
+      } catch (e) {
+        return null;
+      }
+    }
+    return null;
   }
 
   loadReservations(): void {
-    this.reservationService.getAll().subscribe(data => this.reservations = data);
+    this.reservationService.getAll().subscribe(data => {
+      if (this.isAdmin) {
+        this.reservations = data;
+      } else {
+        // Only show reservations for the logged-in user
+        this.reservations = data.filter(r => r.appUserId === this.currentUserId);
+      }
+    });
   }
 
   loadUsers(): void {
-    this.appUserService.getAll().subscribe(data => this.users = data);
+    this.appUserService.getAll().subscribe(data => {
+      this.users = data;
+      // Always set newReservation.appUserId to the logged-in user's id (by email) for USERs
+      const token = localStorage.getItem('jwt');
+      if (token) {
+        try {
+          const payload = JSON.parse(atob(token.split('.')[1]));
+          const email = payload.email || payload.sub || null;
+          if (email) {
+            const user = this.users.find((u: AppUser) => u.email === email);
+            if (user) {
+              this.currentUserId = user.id ?? null;
+              this.newReservation.appUserId = user.id;
+              if (!this.isAdmin) {
+                this.newReservation.status = 'CONFIRMED';
+              }
+            }
+          }
+        } catch (e) { /* ignore */ }
+      }
+    });
   }
 
   loadRooms(): void {

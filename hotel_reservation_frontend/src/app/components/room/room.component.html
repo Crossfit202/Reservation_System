@@ -5,28 +5,35 @@
             <ul>
                 <li *ngFor="let room of rooms">
                     <div class="room-info">
-                        <img *ngIf="room.roomType?.imageName" [src]="'assets/room-types/' + room.roomType?.imageName"
-                            [alt]="room.roomType?.name || 'Room Type'"
-                            style="width:100px; height:auto; border-radius:8px; margin-bottom:8px;">
-                        <strong>#{{ room.roomNumber }}</strong> | {{ room.type }} | {{ room.capacity }} guests | ${{
-                        room.price }} |
-                        <span [class.available]="room.available" [class.unavailable]="!room.available">
-                            {{ room.available ? 'Available' : 'Unavailable' }}
-                        </span>
-                        <br>
-                        <small>
-                            Amenities:
-                            <span *ngIf="room.amenitiesSet?.length; else noAmenities">
-                                <span *ngFor="let amenity of room.amenitiesSet; let last = last">
-                                    {{ amenity.name }}<span *ngIf="!last">, </span>
-                                </span>
+                        <img *ngIf="room.roomType?.imageName" class="room-image"
+                            [src]="'assets/room-types/' + room.roomType?.imageName"
+                            [alt]="room.roomType?.name || 'Room Type'">
+                        <div>
+                            <strong>#{{ room.roomNumber }}</strong> | {{ room.type }} | {{ room.capacity }} guests | ${{
+                            room.price }} |
+                            <span [class.available]="room.available" [class.unavailable]="!room.available">
+                                {{ room.available ? 'Available' : 'Unavailable' }}
                             </span>
-                            <ng-template #noAmenities>None</ng-template>
-                        </small>
+                            <br>
+                            <small>
+                                Amenities:
+                                <span *ngIf="room.amenitiesSet?.length; else noAmenities">
+                                    <span *ngFor="let amenity of room.amenitiesSet; let last = last">
+                                        {{ amenity.name }}<span *ngIf="!last">, </span>
+                                    </span>
+                                </span>
+                                <ng-template #noAmenities>None</ng-template>
+                            </small>
+                        </div>
                     </div>
-                    <div class="room-actions" *ngIf="isAdmin">
-                        <button (click)="selectRoom(room)">Edit</button>
-                        <button (click)="deleteRoom(room.id!)">Delete</button>
+                    <div class="room-actions">
+                        <ng-container *ngIf="isAdmin; else userActions">
+                            <button (click)="selectRoom(room)">Edit</button>
+                            <button (click)="deleteRoom(room.id!)">Delete</button>
+                        </ng-container>
+                        <ng-template #userActions>
+                            <button (click)="reserveRoom(room)">Reserve</button>
+                        </ng-template>
                     </div>
                 </li>
             </ul>

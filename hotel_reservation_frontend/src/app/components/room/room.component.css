@@ -48,6 +48,19 @@ body {
 
 .room-info {
     flex: 1;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 1.5rem;
+}
+
+.room-image {
+    flex-shrink: 0;
+    width: 400px;
+    height: auto;
+    border-radius: 8px;
+    margin-bottom: 8px;
+    object-fit: cover;
 }
 
 .room-actions button {

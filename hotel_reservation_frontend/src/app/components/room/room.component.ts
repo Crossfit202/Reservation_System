@@ -1,3 +1,4 @@
+import { Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -37,8 +38,13 @@ export class RoomComponent implements OnInit {
     private roomService: RoomService,
     private roomTypeService: RoomTypeService,
     private amenityService: AmenityService,
-    private authService: AuthService // <-- Inject AuthService
+    private authService: AuthService, // <-- Inject AuthService
+    private router: Router
   ) { }
+  reserveRoom(room: Room): void {
+    // Navigate to the reservation creation page, passing the room id (or other info as needed)
+    this.router.navigate(['/reservations'], { queryParams: { roomId: room.id } });
+  }
 
   ngOnInit(): void {
     this.loadRooms();
