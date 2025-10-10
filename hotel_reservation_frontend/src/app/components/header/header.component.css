@@ -1,9 +1,47 @@
+.profile-avatar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: #28a745;
+    color: #fff;
+    font-weight: 700;
+    font-size: 1.3rem;
+    margin: 0.5rem 0 1.5rem 0.5rem;
+    box-shadow: 0 2px 8px rgba(44, 62, 80, 0.08);
+    cursor: pointer;
+    transition: background 0.2s, transform 0.25s cubic-bezier(.4, 2, .6, 1), box-shadow 0.25s, filter 0.25s;
+    border: 2px solid #e0e0e0;
+    user-select: none;
+    will-change: transform, box-shadow, filter;
+}
+
+.profile-avatar:hover,
+.profile-avatar:focus {
+    background: #218838;
+    transform: scale(1.13) rotate(-8deg);
+    box-shadow: 0 6px 24px 0 rgba(40, 167, 69, 0.25), 0 1.5px 6px 0 rgba(44, 62, 80, 0.10);
+    filter: brightness(1.08) saturate(1.2);
+    outline: none;
+}
+
+.profile-avatar:focus {
+    outline: 2px solid #0056b3;
+}
+
+.profile-avatar-menu {
+    margin-top: 0.5rem;
+    margin-bottom: 1.5rem;
+}
+
 .main-header {
     position: fixed;
     top: 0;
     left: 0;
     width: 100vw;
-    height: 64px;
+    height: 100px;
     background: #fff;
     box-shadow: 0 2px 8px rgba(44, 62, 80, 0.07);
     z-index: 100;
@@ -15,7 +53,7 @@
     width: 100%;
     display: flex;
     align-items: center;
-    height: 110%;
+    height: 100%;
     padding: 0 1.5rem;
     position: relative;
     justify-content: center;
@@ -81,14 +119,14 @@
 
 .nav-drawer {
     position: fixed;
-    top: 64px;
+    top: 100px;
     left: 0;
     /* Drawer now comes from the left */
     width: 220px;
     background: #fff;
     box-shadow: 2px 0 8px rgba(44, 62, 80, 0.07);
     /* shadow on the right side */
-    height: calc(100vh - 64px);
+    height: calc(100vh - 100px);
     display: flex;
     flex-direction: column;
     padding: 1.5rem 1rem;

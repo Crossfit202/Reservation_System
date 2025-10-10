@@ -25,6 +25,19 @@ export class HeaderComponent {
     });
   }
 
+  get userInitials(): string {
+    if (!this.userEmail) return '';
+    // Try to get initials from email prefix or name
+    const emailPrefix = this.userEmail.split('@')[0];
+    const parts = emailPrefix.split(/[._-]/).filter(Boolean);
+    if (parts.length >= 2) {
+      return (parts[0][0] + parts[1][0]).toUpperCase();
+    } else if (parts.length === 1) {
+      return parts[0].slice(0, 2).toUpperCase();
+    }
+    return this.userEmail.slice(0, 2).toUpperCase();
+  }
+
   toggleMenu() {
     this.menuOpen = !this.menuOpen;
   }
