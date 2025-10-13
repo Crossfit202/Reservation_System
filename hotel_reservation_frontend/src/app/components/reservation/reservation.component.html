@@ -124,10 +124,12 @@
                 <h3>Payment Required</h3>
                 <div id="card-element"></div>
                 <button (click)="confirmPayment(clientSecret)">Pay</button>
-                <div *ngIf="paymentError" class="error">{{ paymentError }}</div>
             </div>
             <div *ngIf="paymentSuccess" class="success">
                 Payment successful! Reservation confirmed.
+            </div>
+            <div *ngIf="paymentError" class="error-message" style="margin-top: 1em; color: #b00020; font-weight: bold;">
+                {{ paymentError }}
             </div>
         </div>
     </div>

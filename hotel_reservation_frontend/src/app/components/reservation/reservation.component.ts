@@ -215,54 +215,78 @@ export class ReservationComponent implements OnInit {
       this.stripe = await loadStripe('pk_test_51SHrhqPSQIt22pYjtQQaBCYMso5eGxteHuY74KG09IapD6ur0A1RQgwUcHQxaDCoYWL3fmmCci9as9EuJ6DZJczH00yYGLTAbG');
     }
 
-    this.stripeService.createPaymentIntent(amount, currency, description).subscribe(async (res) => {
-      this.clientSecret = res.clientSecret; // <-- Save the clientSecret here!
-      if (!this.stripe) return;
-      if (!this.elements) {
-        this.elements = this.stripe.elements();
-        this.cardElement = this.elements.create('card');
-        this.cardElement.mount('#card-element');
+    this.stripeService.createPaymentIntent(amount, currency, description).subscribe({
+      next: async (res) => {
+        this.clientSecret = res.clientSecret;
+        if (!this.stripe) return;
+        if (!this.elements) {
+          this.elements = this.stripe.elements();
+          this.cardElement = this.elements.create('card');
+          this.cardElement.mount('#card-element');
+        }
+      },
+      error: (err) => {
+        this.paymentError = err.error?.message || 'Payment failed. Please try another card.';
+        this.paymentInProgress = false;
       }
     });
   }
 
   async confirmPayment(clientSecret: string) {
+    this.paymentError = '';
     if (!this.stripe || !this.cardElement) return;
-    const { paymentIntent, error } = await this.stripe.confirmCardPayment(clientSecret, {
-      payment_method: { card: this.cardElement }
-    });
-    if (error) {
-      this.paymentError = error.message || 'Payment failed';
+    try {
+      const result = await this.stripe.confirmCardPayment(clientSecret, {
+        payment_method: { card: this.cardElement }
+      });
+      if (result.error) {
+        // Show error to user
+        this.paymentError = result.error.message || 'Payment failed. Please try another card.';
+        this.paymentInProgress = false;
+        return;
+      }
+      if (result.paymentIntent && result.paymentIntent.status === 'succeeded') {
+        this.paymentSuccess = true;
+        this.paymentInProgress = false;
+        // Now create the reservation and payment in the backend
+        this.createReservationAfterPayment(result.paymentIntent.id, result.paymentIntent.amount, result.paymentIntent.currency, result.paymentIntent.status);
+      }
+    } catch (err: any) {
+      this.paymentError = err.message || 'Payment failed. Please try again.';
       this.paymentInProgress = false;
-    } else if (paymentIntent && paymentIntent.status === 'succeeded') {
-      this.paymentSuccess = true;
-      this.paymentInProgress = false;
-      // Now create the reservation and payment in the backend
-      this.createReservationAfterPayment(paymentIntent.id, paymentIntent.amount, paymentIntent.currency, paymentIntent.status);
     }
   }
 
   createReservationAfterPayment(stripePaymentId: string, amount: number, currency: string, status: string) {
     // 1. Create the reservation
-    this.reservationService.create(this.newReservation).subscribe(reservation => {
-      if (reservation.id == null) {
-        // Handle error, e.g., show a message or return early
-        this.showToast('Reservation creation failed: missing ID.');
-        return;
+    this.reservationService.create(this.newReservation).subscribe({
+      next: reservation => {
+        if (reservation.id == null) {
+          this.showToast('Reservation creation failed: missing ID.');
+          return;
+        }
+        // 2. Create the payment record
+        const payment = {
+          reservation: { id: reservation.id },
+          amount: amount / 100,
+          currency,
+          status,
+          stripePaymentId
+        };
+        this.paymentService.create(payment).subscribe({
+          next: () => {
+            this.loadReservations();
+            this.showToast('Reservation and payment successful!');
+            // Reset form, etc.
+          },
+          error: (err) => {
+            this.paymentError = err.error?.message || 'Payment record failed. Please contact support.';
+          }
+        });
+      },
+      error: (err) => {
+        this.paymentError = err.error?.message || 'Reservation creation failed. Please try again.';
       }
-      // 2. Create the payment record
-      const payment = {
-        reservation: { id: reservation.id },
-        amount: amount / 100,
-        currency,
-        status,
-        stripePaymentId
-      };
-      this.paymentService.create(payment).subscribe(() => {
-        this.loadReservations();
-        this.showToast('Reservation and payment successful!');
-        // Reset form, etc.
-      });
     });
   }
 
@@ -283,11 +307,12 @@ export class ReservationComponent implements OnInit {
   }
 
   getReservationDays(): number {
+    if (!this.newReservation.checkIn || !this.newReservation.checkOut) return 0;
     const checkIn = new Date(this.newReservation.checkIn);
     const checkOut = new Date(this.newReservation.checkOut);
-    // Calculate difference in milliseconds, then convert to days
+    // Hotel logic: nights = checkout - checkin (do not include checkout day)
     const diffTime = checkOut.getTime() - checkIn.getTime();
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    return diffDays > 0 ? diffDays : 1; // At least 1 day
+    const diffDays = diffTime / (1000 * 60 * 60 * 24);
+    return diffDays > 0 ? diffDays : 0;
   }
 }
