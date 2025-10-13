@@ -1,6 +1,6 @@
 export interface Payment {
     id?: number;
-    reservationId: number;
+    reservation: { id: number };
     amount: number;
     currency: string;
     status: string;

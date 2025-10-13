@@ -1,7 +1,7 @@
 <h2>Payments</h2>
 <ul>
     <li *ngFor="let payment of payments">
-        Reservation: {{ payment.reservationId }} |
+        Reservation: {{ payment.reservation?.id }} |
         Amount: {{ payment.amount }} {{ payment.currency }} |
         Status: {{ payment.status }} |
         Stripe ID: {{ payment.stripePaymentId }} |
@@ -13,7 +13,7 @@
 
 <h3>Add Payment</h3>
 <form (ngSubmit)="createPayment()">
-    <input [(ngModel)]="newPayment.reservationId" name="reservationId" type="number" placeholder="Reservation ID"
+    <input [(ngModel)]="newPayment.reservation.id" name="reservationId" type="number" placeholder="Reservation ID"
         required>
     <input [(ngModel)]="newPayment.amount" name="amount" type="number" placeholder="Amount" required>
     <input [(ngModel)]="newPayment.currency" name="currency" placeholder="Currency" required>
@@ -25,7 +25,7 @@
 <div *ngIf="selectedPayment">
     <h3>Edit Payment</h3>
     <form (ngSubmit)="updatePayment()">
-        <input [(ngModel)]="selectedPayment!.reservationId" name="editReservationId" type="number" required>
+        <input [(ngModel)]="selectedPayment!.reservation.id" name="editReservationId" type="number" required>
         <input [(ngModel)]="selectedPayment!.amount" name="editAmount" type="number" required>
         <input [(ngModel)]="selectedPayment!.currency" name="editCurrency" required>
         <input [(ngModel)]="selectedPayment!.status" name="editStatus" required>

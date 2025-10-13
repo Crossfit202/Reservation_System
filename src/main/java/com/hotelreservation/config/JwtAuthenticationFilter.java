@@ -1,10 +1,13 @@
 package com.hotelreservation.config;
 
 import com.hotelreservation.util.JwtUtil;
+
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import jakarta.servlet.FilterChain;
@@ -12,6 +15,10 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+import java.util.List;
+import java.util.stream.Collectors;
 import java.io.IOException;
 
 @Component
@@ -39,9 +46,18 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             var userDetails = userDetailsService.loadUserByUsername(username);
-            if (jwtUtil.validateToken(token, userDetails)) { // Implement validateToken in JwtUtil
+            if (jwtUtil.validateToken(token, userDetails)) {
+                // Parse roles from JWT and map to authorities
+                Claims claims = Jwts.parser()
+                        .setSigningKey(jwtUtil.getSecret()) // implement getSecret() in JwtUtil if needed
+                        .parseClaimsJws(token)
+                        .getBody();
+                List<String> roles = claims.get("roles", List.class);
+                List<GrantedAuthority> authorities = roles == null ? List.of()
+                        : roles.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList());
+
                 var authToken = new UsernamePasswordAuthenticationToken(
-                        userDetails, null, userDetails.getAuthorities());
+                        userDetails, null, authorities);
                 authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authToken);
             }

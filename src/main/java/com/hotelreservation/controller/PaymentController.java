@@ -1,6 +1,8 @@
 package com.hotelreservation.controller;
 
 import com.hotelreservation.entity.Payment;
+import com.hotelreservation.entity.Reservation;
+import com.hotelreservation.repository.ReservationRepository;
 import com.hotelreservation.service.PaymentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +14,9 @@ import java.util.List;
 public class PaymentController {
     @Autowired
     private PaymentService paymentService;
+
+    @Autowired
+    private ReservationRepository reservationRepository; // Add this
 
     @GetMapping
     public List<Payment> getAllPayments() {
@@ -27,6 +32,12 @@ public class PaymentController {
 
     @PostMapping
     public Payment createPayment(@RequestBody Payment payment) {
+        // Fetch the Reservation entity by ID if only ID is provided
+        if (payment.getReservation() != null && payment.getReservation().getId() != null) {
+            Reservation reservation = reservationRepository.findById(payment.getReservation().getId())
+                    .orElseThrow(() -> new RuntimeException("Reservation not found"));
+            payment.setReservation(reservation);
+        }
         return paymentService.createPayment(payment);
     }
 

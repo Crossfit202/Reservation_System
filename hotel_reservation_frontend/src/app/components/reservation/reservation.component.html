@@ -79,7 +79,7 @@
             <!-- USER: Add form if roomIdFromQuery -->
             <ng-container *ngIf="!isAdmin && roomIdFromQuery">
                 <h3>Add Reservation</h3>
-                <form (ngSubmit)="createReservation()">
+                <form (ngSubmit)="startPaymentProcess()">
                     <input type="text" [value]="currentUserDisplayName" disabled>
                     <select [(ngModel)]="newReservation.roomId" name="roomId" required
                         [disabled]="roomIdFromQuery !== null">
@@ -118,6 +118,16 @@
                     <button type="submit">Update</button>
                     <button type="button" (click)="selectedReservation = null">Cancel</button>
                 </form>
+            </div>
+
+            <div *ngIf="paymentInProgress">
+                <h3>Payment Required</h3>
+                <div id="card-element"></div>
+                <button (click)="confirmPayment(clientSecret)">Pay</button>
+                <div *ngIf="paymentError" class="error">{{ paymentError }}</div>
+            </div>
+            <div *ngIf="paymentSuccess" class="success">
+                Payment successful! Reservation confirmed.
             </div>
         </div>
     </div>

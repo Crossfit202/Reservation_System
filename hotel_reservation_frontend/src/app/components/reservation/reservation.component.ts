@@ -10,6 +10,9 @@ import { AppUserService } from '../../services/app-user.service';
 import { RoomService } from '../../services/room.service';
 
 import { AuthService } from '../../services/auth.service';
+import { StripeService } from '../../services/stripe.service';
+import { loadStripe, Stripe, StripeElements } from '@stripe/stripe-js';
+import { PaymentService } from '../../services/payment.service';
 
 @Component({
   selector: 'app-reservation',
@@ -41,11 +44,22 @@ export class ReservationComponent implements OnInit {
   toastTimeout: any;
   errorMessage: string = '';
 
+  stripe: Stripe | null = null;
+  elements: StripeElements | null = null;
+  cardElement: any;
+  paymentInProgress = false;
+  paymentError = '';
+  paymentSuccess = false;
+
+  clientSecret: string = ''; // Add this property to your component
+
   constructor(
     private reservationService: ReservationService,
     private appUserService: AppUserService,
     private roomService: RoomService,
     private authService: AuthService,
+    private stripeService: StripeService,
+    private paymentService: PaymentService,
     public route: ActivatedRoute
   ) { }
 
@@ -190,5 +204,90 @@ export class ReservationComponent implements OnInit {
 
   deleteReservation(id: number): void {
     this.reservationService.delete(id).subscribe(() => this.loadReservations());
+  }
+
+  async showPaymentForm(amount: number, currency: string, description: string) {
+    this.paymentInProgress = true;
+    this.paymentError = '';
+    this.paymentSuccess = false;
+
+    if (!this.stripe) {
+      this.stripe = await loadStripe('pk_test_51SHrhqPSQIt22pYjtQQaBCYMso5eGxteHuY74KG09IapD6ur0A1RQgwUcHQxaDCoYWL3fmmCci9as9EuJ6DZJczH00yYGLTAbG');
+    }
+
+    this.stripeService.createPaymentIntent(amount, currency, description).subscribe(async (res) => {
+      this.clientSecret = res.clientSecret; // <-- Save the clientSecret here!
+      if (!this.stripe) return;
+      if (!this.elements) {
+        this.elements = this.stripe.elements();
+        this.cardElement = this.elements.create('card');
+        this.cardElement.mount('#card-element');
+      }
+    });
+  }
+
+  async confirmPayment(clientSecret: string) {
+    if (!this.stripe || !this.cardElement) return;
+    const { paymentIntent, error } = await this.stripe.confirmCardPayment(clientSecret, {
+      payment_method: { card: this.cardElement }
+    });
+    if (error) {
+      this.paymentError = error.message || 'Payment failed';
+      this.paymentInProgress = false;
+    } else if (paymentIntent && paymentIntent.status === 'succeeded') {
+      this.paymentSuccess = true;
+      this.paymentInProgress = false;
+      // Now create the reservation and payment in the backend
+      this.createReservationAfterPayment(paymentIntent.id, paymentIntent.amount, paymentIntent.currency, paymentIntent.status);
+    }
+  }
+
+  createReservationAfterPayment(stripePaymentId: string, amount: number, currency: string, status: string) {
+    // 1. Create the reservation
+    this.reservationService.create(this.newReservation).subscribe(reservation => {
+      if (reservation.id == null) {
+        // Handle error, e.g., show a message or return early
+        this.showToast('Reservation creation failed: missing ID.');
+        return;
+      }
+      // 2. Create the payment record
+      const payment = {
+        reservation: { id: reservation.id },
+        amount: amount / 100,
+        currency,
+        status,
+        stripePaymentId
+      };
+      this.paymentService.create(payment).subscribe(() => {
+        this.loadReservations();
+        this.showToast('Reservation and payment successful!');
+        // Reset form, etc.
+      });
+    });
+  }
+
+  startPaymentProcess(): void {
+    this.errorMessage = '';
+    const selectedRoom = this.rooms.find(r => r.id === this.newReservation.roomId);
+    if (selectedRoom && selectedRoom.capacity !== undefined && this.newReservation.numGuests > selectedRoom.capacity) {
+      this.errorMessage = `Cannot reserve for more than ${selectedRoom.capacity} guests in this room.`;
+      return;
+    }
+    const days = this.getReservationDays();
+    const pricePerNight = selectedRoom?.price ?? 0;
+    const totalPrice = days * pricePerNight;
+    const amount = totalPrice * 100;
+    const currency = 'usd';
+    const description = `Reservation for room ${selectedRoom?.id} for ${days} night(s)`;
+    this.showPaymentForm(amount, currency, description);
+  }
+
+  getReservationDays(): number {
+    const checkIn = new Date(this.newReservation.checkIn);
+    const checkOut = new Date(this.newReservation.checkOut);
+    // Calculate difference in milliseconds, then convert to days
+    const diffTime = checkOut.getTime() - checkIn.getTime();
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    return diffDays > 0 ? diffDays : 1; // At least 1 day
   }
 }

@@ -15,7 +15,7 @@ export class PaymentComponent implements OnInit {
   payments: Payment[] = [];
   selectedPayment: Payment | null = null;
   newPayment: Payment = {
-    reservationId: 0,
+    reservation: { id: 0 },
     amount: 0,
     currency: '',
     status: '',
@@ -41,7 +41,7 @@ export class PaymentComponent implements OnInit {
     this.paymentService.create(this.newPayment).subscribe(() => {
       this.loadPayments();
       this.newPayment = {
-        reservationId: 0,
+        reservation: { id: 0 },
         amount: 0,
         currency: '',
         status: '',

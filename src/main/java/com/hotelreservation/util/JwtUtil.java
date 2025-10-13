@@ -16,6 +16,11 @@ import org.springframework.beans.factory.annotation.Value;
 public class JwtUtil {
     @Value("${jwt.secret}")
     private String SECRET_KEY;
+
+    public String getSecret() {
+        return SECRET_KEY;
+    }
+
     private final long EXPIRATION_TIME = 86400000;
 
     @SuppressWarnings("deprecation")

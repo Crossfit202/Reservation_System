@@ -1,0 +1,8 @@
+Good card information 
+
+4242 4242 4242 4242
+12/30 123 12345
+
+Bad Card information
+4000 0000 0000 9995
+12/30 123 12345
