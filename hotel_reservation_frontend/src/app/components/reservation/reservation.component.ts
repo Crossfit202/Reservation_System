@@ -2,6 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatNativeDateModule } from '@angular/material/core';
 import { ReservationService } from '../../services/reservation.service';
 import { Reservation } from '../../Models/reservation.model';
 import { AppUser } from '../../Models/app-user.model';
@@ -19,9 +23,31 @@ import { PaymentService } from '../../services/payment.service';
   templateUrl: './reservation.component.html',
   styleUrls: ['./reservation.component.css'],
   standalone: true,
-  imports: [CommonModule, FormsModule]
+  imports: [CommonModule, FormsModule, MatDatepickerModule, MatFormFieldModule, MatInputModule, MatNativeDateModule]
 })
 export class ReservationComponent implements OnInit {
+  // Disable reserved dates in the datepicker
+  dateFilter = (date: Date | null): boolean => {
+    if (!date) return true;
+    // Compare only date part (ignore time)
+    const dStr = date.toISOString().split('T')[0];
+    return !this.reservedDates.some(rd => rd.toISOString().split('T')[0] === dStr);
+  };
+  // Returns today in yyyy-mm-dd format
+  getMinDate(): string {
+    const today = new Date();
+    return today.toISOString().split('T')[0];
+  }
+
+  // Returns 1 year from today in yyyy-mm-dd format
+  getMaxDate(): string {
+    const nextYear = new Date();
+    nextYear.setFullYear(nextYear.getFullYear() + 1);
+    return nextYear.toISOString().split('T')[0];
+  }
+
+  // Note: To fully block out reserved dates, a custom date picker is needed. The reservedDates array is available for integration.
+  reservedDates: Date[] = [];
   upcomingReservations: Reservation[] = [];
   pastReservations: Reservation[] = [];
   isAdmin: boolean = false;
@@ -121,7 +147,29 @@ export class ReservationComponent implements OnInit {
       }
       this.reservations = filtered;
       this.splitReservationsByDate();
+      this.updateReservedDates();
     });
+  }
+
+  updateReservedDates(): void {
+    // Only for USERS and if a room is selected
+    if (this.isAdmin || !this.newReservation.roomId) {
+      this.reservedDates = [];
+      return;
+    }
+    // Find all reservations for the selected room (exclude cancelled, etc. if needed)
+    const allRoomReservations = this.reservations.filter(r => r.roomId === this.newReservation.roomId);
+    const reserved: Date[] = [];
+    for (const res of allRoomReservations) {
+      if (res.checkIn && res.checkOut) {
+        const start = new Date(res.checkIn);
+        const end = new Date(res.checkOut);
+        for (let d = new Date(start); d < end; d.setDate(d.getDate() + 1)) {
+          reserved.push(new Date(d));
+        }
+      }
+    }
+    this.reservedDates = reserved;
   }
 
   splitReservationsByDate(): void {
@@ -187,6 +235,7 @@ export class ReservationComponent implements OnInit {
       this.errorMessage = `Cannot reserve for more than ${selectedRoom.capacity} guests in this room.`;
       return;
     }
+    this.updateReservedDates();
     this.reservationService.create(this.newReservation).subscribe(() => {
       this.loadReservations();
       this.newReservation = {
@@ -317,6 +366,7 @@ export class ReservationComponent implements OnInit {
       this.errorMessage = `Cannot reserve for more than ${selectedRoom.capacity} guests in this room.`;
       return;
     }
+    this.updateReservedDates();
     const days = this.getReservationDays();
     const pricePerNight = selectedRoom?.price ?? 0;
     const totalPrice = days * pricePerNight;

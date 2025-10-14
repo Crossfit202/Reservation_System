@@ -1,3 +1,162 @@
+/* Style reserved (disabled) days in the datepicker with a dark grey background */
+::ng-deep .mat-calendar-body-disabled>.mat-calendar-body-cell-content {
+    background: #444 !important;
+    color: #fff !important;
+    opacity: 1 !important;
+    border-radius: 50% !important;
+}
+
+/* Force solid background for Angular Material datepicker popup and calendar */
+::ng-deep .cdk-overlay-pane,
+::ng-deep .mat-datepicker-content,
+::ng-deep .mat-calendar,
+::ng-deep .mat-calendar-table,
+::ng-deep .mat-calendar-body,
+::ng-deep .mat-calendar-content {
+    background: #fff !important;
+    opacity: 1 !important;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35) !important;
+    border-radius: 12px !important;
+}
+
+::ng-deep .mat-calendar-body-cell-content,
+::ng-deep .mat-calendar-body-label,
+::ng-deep .mat-calendar-arrow,
+::ng-deep .mat-calendar-period-button {
+    color: #198754 !important;
+}
+
+::ng-deep .mat-calendar-body-selected,
+::ng-deep .mat-calendar-body-active {
+    background: #198754 !important;
+    color: #fff !important;
+}
+
+/* Make Angular Material datepicker popup modal fully opaque and visually distinct */
+.cdk-overlay-pane {
+    background: none !important;
+    box-shadow: none !important;
+}
+
+.mat-datepicker-content {
+    background: #fff !important;
+    color: #222 !important;
+    border-radius: 12px !important;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35) !important;
+    border: 2px solid #198754 !important;
+    opacity: 1 !important;
+    z-index: 9999 !important;
+}
+
+.mat-calendar,
+.mat-calendar-table,
+.mat-calendar-body,
+.mat-calendar-content {
+    background: #fff !important;
+    color: #222 !important;
+    opacity: 1 !important;
+}
+
+.mat-calendar-body-cell-content,
+.mat-calendar-body-label,
+.mat-calendar-arrow,
+.mat-calendar-period-button {
+    color: #198754 !important;
+}
+
+.mat-calendar-body-selected,
+.mat-calendar-body-active {
+    background: #198754 !important;
+    color: #fff !important;
+}
+
+/* Make Angular Material datepicker popup calendar solid green */
+
+/* Make Angular Material datepicker popup calendar solid green */
+.mat-datepicker-content {
+    background: #198754 !important;
+    color: #fff !important;
+    border-radius: 8px;
+}
+
+.mat-calendar {
+    background: #198754 !important;
+    color: #fff !important;
+}
+
+.mat-calendar-table,
+.mat-calendar-body,
+.mat-calendar-content {
+    background: #198754 !important;
+    color: #fff !important;
+}
+
+.mat-calendar-body-cell-content,
+.mat-calendar-body-label,
+.mat-calendar-arrow,
+.mat-calendar-period-button {
+    color: #fff !important;
+}
+
+.mat-calendar-body-selected,
+.mat-calendar-body-active {
+    background: #145c32 !important;
+    color: #fff !important;
+}
+
+/* Make Angular Material datepicker popup and input fields fully solid */
+.mat-datepicker-content,
+.cdk-overlay-pane,
+.mat-calendar {
+    background: #fff !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    border-radius: 8px;
+}
+
+.mat-form-field-appearance-fill .mat-form-field-flex {
+    background: #fff !important;
+    border-radius: 5px;
+    border: 1px solid #ccc !important;
+    box-shadow: none !important;
+}
+
+.mat-form-field-appearance-fill .mat-form-field-outline {
+    display: none;
+}
+
+.mat-input-element,
+.mat-form-field-infix input {
+    background: #fff !important;
+    border-radius: 5px;
+    border: none;
+    box-shadow: none;
+}
+
+.mat-calendar-table,
+.mat-calendar-body,
+.mat-calendar-content {
+    background: #fff !important;
+}
+
+/* Style Angular Material datepicker fields to be solid */
+.mat-form-field-appearance-fill .mat-form-field-flex {
+    background: #fff !important;
+    border-radius: 5px;
+    border: 1px solid #ccc !important;
+    box-shadow: none !important;
+}
+
+.mat-form-field-appearance-fill .mat-form-field-outline {
+    display: none;
+}
+
+.mat-input-element {
+    background: #fff !important;
+    border-radius: 5px;
+    border: none;
+    box-shadow: none;
+}
+
 .error-message {
     color: #dc3545;
     background: #fff0f0;

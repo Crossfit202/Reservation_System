@@ -76,9 +76,15 @@
                         <option *ngFor="let room of rooms" [value]="room.id">{{ room.roomNumber }}</option>
                     </select>
                     <input [(ngModel)]="newReservation.checkIn" name="checkIn" type="date" placeholder="Check-in"
-                        required>
+                        required [min]="getMinDate()" [max]="getMaxDate()" [attr.disabledDates]="reservedDates">
                     <input [(ngModel)]="newReservation.checkOut" name="checkOut" type="date" placeholder="Check-out"
-                        required>
+                        required [min]="getMinDate()" [max]="getMaxDate()" [attr.disabledDates]="reservedDates">
+                    <script>
+                        // Add these methods to ReservationComponent (in .ts file):
+                        // getMinDate(): string { return today in yyyy-mm-dd }
+                        // getMaxDate(): string { return 1 year from today in yyyy-mm-dd }
+                        // Optionally, use a custom date picker for disabling specific dates
+                    </script>
                     <input [(ngModel)]="newReservation.numGuests" name="numGuests" type="number" min="1"
                         placeholder="Guests" required>
                     <input [(ngModel)]="newReservation.status" name="status" placeholder="Status" required>
@@ -96,10 +102,20 @@
                         <option value="" disabled selected>Select Room</option>
                         <option *ngFor="let room of rooms" [value]="room.id">{{ room.roomNumber }}</option>
                     </select>
-                    <input [(ngModel)]="newReservation.checkIn" name="checkIn" type="date" placeholder="Check-in"
-                        required>
-                    <input [(ngModel)]="newReservation.checkOut" name="checkOut" type="date" placeholder="Check-out"
-                        required>
+                    <mat-form-field appearance="fill" style="width: 100%; margin-bottom: 1rem;">
+                        <mat-label>Check-in</mat-label>
+                        <input matInput [matDatepicker]="checkInPicker" [(ngModel)]="newReservation.checkIn"
+                            name="checkIn" required [matDatepickerFilter]="dateFilter">
+                        <mat-datepicker-toggle matSuffix [for]="checkInPicker"></mat-datepicker-toggle>
+                        <mat-datepicker #checkInPicker></mat-datepicker>
+                    </mat-form-field>
+                    <mat-form-field appearance="fill" style="width: 100%; margin-bottom: 1rem;">
+                        <mat-label>Check-out</mat-label>
+                        <input matInput [matDatepicker]="checkOutPicker" [(ngModel)]="newReservation.checkOut"
+                            name="checkOut" required [matDatepickerFilter]="dateFilter">
+                        <mat-datepicker-toggle matSuffix [for]="checkOutPicker"></mat-datepicker-toggle>
+                        <mat-datepicker #checkOutPicker></mat-datepicker>
+                    </mat-form-field>
                     <input [(ngModel)]="newReservation.numGuests" name="numGuests" type="number" min="1"
                         placeholder="Guests" required>
                     <button type="submit">Add</button>
