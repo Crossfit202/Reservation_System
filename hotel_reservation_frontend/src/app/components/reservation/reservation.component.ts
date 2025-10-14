@@ -54,7 +54,7 @@ export class ReservationComponent implements OnInit {
 
   cancelReservation(reservationId?: number): void {
     if (!reservationId) return;
-    this.reservationService.delete(reservationId).subscribe(() => {
+    this.reservationService.cancelReservation(reservationId).subscribe(() => {
       this.loadReservations();
       this.showToast('Reservation cancelled.');
     });
@@ -212,6 +212,11 @@ export class ReservationComponent implements OnInit {
     this.upcomingReservations = [];
     this.pastReservations = [];
     for (const reservation of this.reservations) {
+      // Move canceled reservations to past
+      if (reservation.status === 'CANCELED') {
+        this.pastReservations.push(reservation);
+        continue;
+      }
       if (reservation.checkOut) {
         const checkOutDate = new Date(reservation.checkOut);
         if (checkOutDate >= now) {

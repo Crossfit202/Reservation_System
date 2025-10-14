@@ -5,6 +5,9 @@ import { Reservation } from '../Models/reservation.model';
 
 @Injectable({ providedIn: 'root' })
 export class ReservationService {
+    cancelReservation(id: number): Observable<any> {
+        return this.http.post(`${this.apiUrl}/${id}/cancel`, {});
+    }
     private apiUrl = 'http://localhost:8080/api/reservations';
 
     constructor(private http: HttpClient) { }

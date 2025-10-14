@@ -38,8 +38,12 @@
                         Room: {{ reservation.roomNumber }} |
                         Check-in: {{ reservation.checkIn }} |
                         Check-out: {{ reservation.checkOut }} |
-                        Guests: {{ reservation.numGuests }}
-                        <button *ngIf="canCancel(reservation)" (click)="openCancelModal(reservation.id)">Cancel</button>
+                        Guests: {{ reservation.numGuests }} |
+                        Status: {{ reservation.status }}
+                        <button *ngIf="canCancel(reservation) && reservation.status !== 'CANCELED'"
+                            (click)="openCancelModal(reservation.id)">Cancel</button>
+                        <span *ngIf="reservation.status === 'CANCELED'"
+                            style="color:#b00020;font-weight:500;">Cancelled</span>
                         <!-- Cancel Confirmation Modal -->
                         <div class="modal-backdrop" *ngIf="showCancelModal">
                             <div class="modal">
@@ -59,7 +63,10 @@
                         Room: {{ reservation.roomNumber }} |
                         Check-in: {{ reservation.checkIn }} |
                         Check-out: {{ reservation.checkOut }} |
-                        Guests: {{ reservation.numGuests }}
+                        Guests: {{ reservation.numGuests }} |
+                        Status: {{ reservation.status }}
+                        <span *ngIf="reservation.status === 'CANCELED'"
+                            style="color:#b00020;font-weight:500;">Cancelled</span>
                     </li>
                 </ul>
                 <ng-template #noPast>

@@ -1,5 +1,7 @@
 package com.hotelreservation.controller;
 
+import com.hotelreservation.repository.PaymentRepository;
+
 import com.hotelreservation.entity.AppUser;
 import com.hotelreservation.entity.Reservation;
 import com.hotelreservation.entity.Room;
@@ -18,6 +20,8 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/reservations")
 public class ReservationController {
+    @Autowired
+    private PaymentRepository paymentRepository;
     @Autowired
     private ReservationService reservationService;
 
@@ -100,9 +104,21 @@ public class ReservationController {
         return ResponseEntity.ok(new ReservationResponse(updatedReservation));
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteReservation(@PathVariable Long id) {
-        reservationService.deleteReservation(id);
-        return ResponseEntity.noContent().build();
+    @PostMapping("/{id}/cancel")
+    public ResponseEntity<ReservationResponse> cancelReservation(@PathVariable Long id) {
+        // Find reservation
+        Reservation reservation = reservationService.getReservationById(id).orElse(null);
+        if (reservation == null) {
+            return ResponseEntity.notFound().build();
+        }
+        reservation.setStatus("CANCELED");
+        Reservation updated = reservationService.updateReservation(id, reservation);
+
+        // Update associated payment status to REFUNDED
+        paymentRepository.findByReservation(reservation).ifPresent(payment -> {
+            payment.setStatus("REFUNDED");
+            paymentService.updatePayment(payment.getId(), payment);
+        });
+        return ResponseEntity.ok(new ReservationResponse(updated));
     }
 }
