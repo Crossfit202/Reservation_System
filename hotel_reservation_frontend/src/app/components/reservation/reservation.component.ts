@@ -26,6 +26,21 @@ import { PaymentService } from '../../services/payment.service';
   imports: [CommonModule, FormsModule, MatDatepickerModule, MatFormFieldModule, MatInputModule, MatNativeDateModule]
 })
 export class ReservationComponent implements OnInit {
+  canCancel(reservation: Reservation): boolean {
+    if (!reservation.checkIn) return false;
+    const checkInDate = new Date(reservation.checkIn);
+    const today = new Date();
+    // 7 days = 604800000 ms
+    return (checkInDate.getTime() - today.getTime()) > 7 * 24 * 60 * 60 * 1000;
+  }
+
+  cancelReservation(reservationId?: number): void {
+    if (!reservationId) return;
+    this.reservationService.delete(reservationId).subscribe(() => {
+      this.loadReservations();
+      this.showToast('Reservation cancelled.');
+    });
+  }
   allReservations = [] as Array<Reservation>;
   // Disable reserved dates in the datepicker
   dateFilter = (date: Date | null): boolean => {

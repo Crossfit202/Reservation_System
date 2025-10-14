@@ -5,7 +5,6 @@
             <ul>
                 <li *ngFor="let payment of payments">
                     <ng-container *ngIf="isAdmin; else userView">
-                        Reservation: {{ payment.reservation?.id ?? 'N/A' }} |
                         Amount: {{ payment.amount }} {{ payment.currency }} |
                         Status: {{ payment.status }} |
                         Stripe ID: {{ payment.stripePaymentId }} |
