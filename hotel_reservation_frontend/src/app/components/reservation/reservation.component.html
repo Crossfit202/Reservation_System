@@ -79,12 +79,8 @@
                         required [min]="getMinDate()" [max]="getMaxDate()" [attr.disabledDates]="reservedDates">
                     <input [(ngModel)]="newReservation.checkOut" name="checkOut" type="date" placeholder="Check-out"
                         required [min]="getMinDate()" [max]="getMaxDate()" [attr.disabledDates]="reservedDates">
-                    <script>
-                        // Add these methods to ReservationComponent (in .ts file):
-                        // getMinDate(): string { return today in yyyy-mm-dd }
-                        // getMaxDate(): string { return 1 year from today in yyyy-mm-dd }
-                        // Optionally, use a custom date picker for disabling specific dates
-                    </script>
+                    <label style="font-weight: 500; margin-bottom: 0.2rem; color: #333; display: block;">Number of
+                        Guests</label>
                     <input [(ngModel)]="newReservation.numGuests" name="numGuests" type="number" min="1"
                         placeholder="Guests" required>
                     <input [(ngModel)]="newReservation.status" name="status" placeholder="Status" required>
@@ -116,6 +112,7 @@
                         <mat-datepicker-toggle matSuffix [for]="checkOutPicker"></mat-datepicker-toggle>
                         <mat-datepicker #checkOutPicker></mat-datepicker>
                     </mat-form-field>
+                    <h4>Number of Guests</h4>
                     <input [(ngModel)]="newReservation.numGuests" name="numGuests" type="number" min="1"
                         placeholder="Guests" required>
                     <button type="submit">Add</button>

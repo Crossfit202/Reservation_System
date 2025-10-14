@@ -26,6 +26,7 @@ import { PaymentService } from '../../services/payment.service';
   imports: [CommonModule, FormsModule, MatDatepickerModule, MatFormFieldModule, MatInputModule, MatNativeDateModule]
 })
 export class ReservationComponent implements OnInit {
+  allReservations = [] as Array<Reservation>;
   // Disable reserved dates in the datepicker
   dateFilter = (date: Date | null): boolean => {
     if (!date) return true;
@@ -138,6 +139,7 @@ export class ReservationComponent implements OnInit {
 
   loadReservations(): void {
     this.reservationService.getAll().subscribe(data => {
+      this.allReservations = data;
       let filtered: Reservation[];
       if (this.isAdmin) {
         filtered = data;
@@ -152,13 +154,13 @@ export class ReservationComponent implements OnInit {
   }
 
   updateReservedDates(): void {
-    // Only for USERS and if a room is selected
-    if (this.isAdmin || !this.newReservation.roomId) {
+    // Only if a room is selected
+    if (!this.newReservation.roomId) {
       this.reservedDates = [];
       return;
     }
-    // Find all reservations for the selected room (exclude cancelled, etc. if needed)
-    const allRoomReservations = this.reservations.filter(r => r.roomId === this.newReservation.roomId);
+    // Use all reservations for the selected room (not just current user's)
+    const allRoomReservations = this.allReservations.filter(r => r.roomId === this.newReservation.roomId);
     const reserved: Date[] = [];
     for (const res of allRoomReservations) {
       if (res.checkIn && res.checkOut) {
@@ -236,7 +238,19 @@ export class ReservationComponent implements OnInit {
       return;
     }
     this.updateReservedDates();
-    this.reservationService.create(this.newReservation).subscribe(() => {
+    // Format dates as yyyy-MM-dd
+    const formatDate = (d: any) => {
+      if (!d) return '';
+      if (typeof d === 'string' && d.length === 10 && d.match(/^\d{4}-\d{2}-\d{2}$/)) return d;
+      const date = new Date(d);
+      return date.toISOString().slice(0, 10);
+    };
+    const reservationToSend = {
+      ...this.newReservation,
+      checkIn: formatDate(this.newReservation.checkIn),
+      checkOut: formatDate(this.newReservation.checkOut)
+    };
+    this.reservationService.create(reservationToSend).subscribe(() => {
       this.loadReservations();
       this.newReservation = {
         appUserId: 0,
@@ -328,7 +342,18 @@ export class ReservationComponent implements OnInit {
 
   createReservationAfterPayment(stripePaymentId: string, amount: number, currency: string, status: string) {
     // 1. Create the reservation
-    this.reservationService.create(this.newReservation).subscribe({
+    const formatDate = (d: any) => {
+      if (!d) return '';
+      if (typeof d === 'string' && d.length === 10 && d.match(/^\d{4}-\d{2}-\d{2}$/)) return d;
+      const date = new Date(d);
+      return date.toISOString().slice(0, 10);
+    };
+    const reservationToSend = {
+      ...this.newReservation,
+      checkIn: formatDate(this.newReservation.checkIn),
+      checkOut: formatDate(this.newReservation.checkOut)
+    };
+    this.reservationService.create(reservationToSend).subscribe({
       next: reservation => {
         if (reservation.id == null) {
           this.showToast('Reservation creation failed: missing ID.');

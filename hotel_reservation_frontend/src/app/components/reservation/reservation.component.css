@@ -1,3 +1,9 @@
+/* Add spacing between datepicker labels and input fields */
+.mat-form-field-label {
+    margin-bottom: 0.5rem !important;
+    display: block !important;
+}
+
 /* Style reserved (disabled) days in the datepicker with a dark grey background */
 ::ng-deep .mat-calendar-body-disabled>.mat-calendar-body-cell-content {
     background: #444 !important;
