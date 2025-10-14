@@ -39,8 +39,15 @@
                         Check-in: {{ reservation.checkIn }} |
                         Check-out: {{ reservation.checkOut }} |
                         Guests: {{ reservation.numGuests }}
-                        <button *ngIf="canCancel(reservation)"
-                            (click)="cancelReservation(reservation.id)">Cancel</button>
+                        <button *ngIf="canCancel(reservation)" (click)="openCancelModal(reservation.id)">Cancel</button>
+                        <!-- Cancel Confirmation Modal -->
+                        <div class="modal-backdrop" *ngIf="showCancelModal">
+                            <div class="modal">
+                                <p>Are you sure you want to cancel this reservation?</p>
+                                <button (click)="confirmCancelReservation()">Yes, Cancel</button>
+                                <button (click)="closeCancelModal()">No</button>
+                            </div>
+                        </div>
                     </li>
                 </ul>
                 <ng-template #noUpcoming>

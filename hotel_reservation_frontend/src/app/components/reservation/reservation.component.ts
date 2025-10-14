@@ -26,6 +26,24 @@ import { PaymentService } from '../../services/payment.service';
   imports: [CommonModule, FormsModule, MatDatepickerModule, MatFormFieldModule, MatInputModule, MatNativeDateModule]
 })
 export class ReservationComponent implements OnInit {
+  showCancelModal: boolean = false;
+  pendingCancelReservationId: number | null = null;
+  openCancelModal(reservationId?: number): void {
+    if (!reservationId) return;
+    this.pendingCancelReservationId = reservationId;
+    this.showCancelModal = true;
+  }
+
+  closeCancelModal(): void {
+    this.showCancelModal = false;
+    this.pendingCancelReservationId = null;
+  }
+
+  confirmCancelReservation(): void {
+    if (!this.pendingCancelReservationId) return;
+    this.cancelReservation(this.pendingCancelReservationId);
+    this.closeCancelModal();
+  }
   canCancel(reservation: Reservation): boolean {
     if (!reservation.checkIn) return false;
     const checkInDate = new Date(reservation.checkIn);
