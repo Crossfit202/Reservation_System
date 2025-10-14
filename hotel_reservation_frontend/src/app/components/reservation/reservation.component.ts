@@ -75,7 +75,6 @@ export class ReservationComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.loadReservations();
     this.loadUsers();
     this.loadRooms();
 
@@ -87,13 +86,6 @@ export class ReservationComponent implements OnInit {
         this.roomIdFromQuery = +roomId;
       }
     });
-
-    // Get current user ID (assumes AuthService provides it via JWT or similar)
-    const userId = this.getCurrentUserId();
-    if (userId) {
-      this.newReservation.appUserId = userId;
-      this.currentUserId = userId;
-    }
 
     // Set isAdmin from AuthService
     this.authService.userRole$.subscribe(role => {
@@ -144,9 +136,14 @@ export class ReservationComponent implements OnInit {
               if (!this.isAdmin) {
                 this.newReservation.status = 'CONFIRMED';
               }
+              // Now that we have the user ID, load reservations
+              this.loadReservations();
             }
           }
         } catch (e) { /* ignore */ }
+      } else {
+        // If no token, still load reservations (e.g., for admin)
+        this.loadReservations();
       }
     });
   }

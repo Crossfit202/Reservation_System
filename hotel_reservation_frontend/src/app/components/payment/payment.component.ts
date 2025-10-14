@@ -22,10 +22,22 @@ export class PaymentComponent implements OnInit {
     stripePaymentId: '',
     createdAt: ''
   };
+  isAdmin: boolean = false;
 
   constructor(private paymentService: PaymentService) { }
 
   ngOnInit(): void {
+    // Check role from localStorage or a service (adjust as needed)
+    const token = localStorage.getItem('jwt');
+    if (token) {
+      try {
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        const roles: string[] = payload.roles || [];
+        this.isAdmin = Array.isArray(roles) ? roles.includes('ADMIN') : roles === 'ADMIN';
+      } catch (e) {
+        this.isAdmin = false;
+      }
+    }
     this.loadPayments();
   }
 
