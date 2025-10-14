@@ -33,6 +33,7 @@ public class PaymentService {
         payment.setStatus(paymentDetails.getStatus());
         payment.setStripePaymentId(paymentDetails.getStripePaymentId());
         payment.setReservation(paymentDetails.getReservation());
+        payment.setAppUser(paymentDetails.getAppUser());
         return paymentRepository.save(payment);
     }
 

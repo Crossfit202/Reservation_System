@@ -2,12 +2,13 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Payment } from '../Models/payment.model';
+import { AuthService } from './auth.service';
 
 @Injectable({ providedIn: 'root' })
 export class PaymentService {
     private apiUrl = 'http://localhost:8080/api/payments';
 
-    constructor(private http: HttpClient) { }
+    constructor(private http: HttpClient, private authService: AuthService) { }
 
     getAll(): Observable<Payment[]> {
         return this.http.get<Payment[]>(this.apiUrl);
@@ -18,11 +19,13 @@ export class PaymentService {
     }
 
     create(payment: Payment): Observable<Payment> {
-        return this.http.post<Payment>(this.apiUrl, payment);
+        const payload: any = { ...payment, reservationId: payment.reservation?.id };
+        return this.http.post<Payment>(this.apiUrl, payload);
     }
 
     update(id: number, payment: Payment): Observable<Payment> {
-        return this.http.put<Payment>(`${this.apiUrl}/${id}`, payment);
+        const payload: any = { ...payment, reservationId: payment.reservation?.id };
+        return this.http.put<Payment>(`${this.apiUrl}/${id}`, payload);
     }
 
     delete(id: number): Observable<void> {

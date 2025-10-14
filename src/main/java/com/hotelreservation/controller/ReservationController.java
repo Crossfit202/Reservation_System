@@ -6,6 +6,8 @@ import com.hotelreservation.entity.Room;
 import com.hotelreservation.repository.RoomRepository;
 import com.hotelreservation.repository.UserRepository;
 import com.hotelreservation.service.ReservationService;
+import com.hotelreservation.entity.Payment;
+import com.hotelreservation.service.PaymentService;
 import com.hotelreservation.dto.ReservationRequest;
 import com.hotelreservation.dto.ReservationResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +26,9 @@ public class ReservationController {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private PaymentService paymentService;
 
     @GetMapping
     public List<ReservationResponse> getAllReservations() {
@@ -54,6 +59,26 @@ public class ReservationController {
         reservation.setStatus(request.status);
 
         Reservation savedReservation = reservationService.createReservation(reservation);
+
+        // If payment info is present, create the payment
+        if (request.paymentAmount != null && request.paymentCurrency != null) {
+            Payment payment = new Payment();
+            payment.setAmount(request.paymentAmount);
+            payment.setCurrency(request.paymentCurrency);
+            payment.setStatus(request.paymentStatus != null ? request.paymentStatus : "SUCCESSFUL");
+            payment.setStripePaymentId(request.paymentStripePaymentId);
+            payment.setReservation(savedReservation);
+            // Set appUser for payment: use paymentAppUserId if provided, else reservation
+            // user
+            if (request.paymentAppUserId != null) {
+                AppUser paymentUser = userRepository.findById(request.paymentAppUserId).orElse(user);
+                payment.setAppUser(paymentUser);
+            } else {
+                payment.setAppUser(user);
+            }
+            paymentService.createPayment(payment);
+        }
+
         return new ReservationResponse(savedReservation);
     }
 

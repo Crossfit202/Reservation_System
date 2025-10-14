@@ -3,6 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { PaymentService } from '../../services/payment.service';
 import { Payment } from '../../Models/payment.model';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-payment',
@@ -24,7 +25,7 @@ export class PaymentComponent implements OnInit {
   };
   isAdmin: boolean = false;
 
-  constructor(private paymentService: PaymentService) { }
+  constructor(private paymentService: PaymentService, private authService: AuthService) { }
 
   ngOnInit(): void {
     // Check role from localStorage or a service (adjust as needed)
@@ -50,6 +51,11 @@ export class PaymentComponent implements OnInit {
   }
 
   createPayment(): void {
+    // Attach appUserId from AuthService
+    const userId = this.authService.getUserIdFromJwt();
+    if (userId) {
+      this.newPayment.appUserId = userId;
+    }
     this.paymentService.create(this.newPayment).subscribe(() => {
       this.loadPayments();
       this.newPayment = {

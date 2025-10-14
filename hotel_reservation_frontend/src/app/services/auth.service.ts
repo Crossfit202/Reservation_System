@@ -21,6 +21,19 @@ export class AuthService {
         this.userRole$ = this.userRoleSubject.asObservable();
     }
 
+    getUserIdFromJwt(): number | null {
+        const token = localStorage.getItem('jwt');
+        if (token) {
+            try {
+                const payload = JSON.parse(atob(token.split('.')[1]));
+                return payload.id ? Number(payload.id) : null;
+            } catch (e) {
+                return null;
+            }
+        }
+        return null;
+    }
+
     login(email: string, password: string) {
         return this.http.post(`${this.apiUrl}/login`, { email, password }, { responseType: 'text' });
     }

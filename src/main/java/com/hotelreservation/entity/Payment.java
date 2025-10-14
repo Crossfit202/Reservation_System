@@ -6,7 +6,9 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+
 import jakarta.persistence.PrePersist;
+import com.hotelreservation.entity.AppUser;
 
 @Entity
 public class Payment {
@@ -17,6 +19,10 @@ public class Payment {
     @ManyToOne
     @JoinColumn(name = "reservation_id", nullable = false)
     private Reservation reservation;
+
+    @ManyToOne
+    @JoinColumn(name = "app_user_id")
+    private AppUser appUser;
 
     private double amount;
     private String currency;
@@ -30,6 +36,14 @@ public class Payment {
     }
 
     // Getters and setters
+    public AppUser getAppUser() {
+        return appUser;
+    }
+
+    public void setAppUser(AppUser appUser) {
+        this.appUser = appUser;
+    }
+
     public Long getId() {
         return id;
     }

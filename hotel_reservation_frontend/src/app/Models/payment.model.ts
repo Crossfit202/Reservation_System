@@ -6,4 +6,5 @@ export interface Payment {
     status: string;
     stripePaymentId?: string;
     createdAt?: string; // ISO date string
+    appUserId?: number;
 }

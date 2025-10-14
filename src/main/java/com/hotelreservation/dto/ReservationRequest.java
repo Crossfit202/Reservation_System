@@ -7,4 +7,11 @@ public class ReservationRequest {
     public String checkOut;
     public int numGuests;
     public String status;
+
+    // Optional payment fields
+    public Double paymentAmount;
+    public String paymentCurrency;
+    public String paymentStatus;
+    public String paymentStripePaymentId;
+    public Long paymentAppUserId;
 }

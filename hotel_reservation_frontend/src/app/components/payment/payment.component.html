@@ -4,15 +4,20 @@
             <h2>Payments</h2>
             <ul>
                 <li *ngFor="let payment of payments">
-                    Reservation: {{ payment.reservation.id }} |
-                    Amount: {{ payment.amount }} {{ payment.currency }} |
-                    Status: {{ payment.status }} |
-                    Stripe ID: {{ payment.stripePaymentId }} |
-                    Created: {{ payment.createdAt }}
-                    <ng-container *ngIf="isAdmin">
+                    <ng-container *ngIf="isAdmin; else userView">
+                        Reservation: {{ payment.reservation?.id ?? 'N/A' }} |
+                        Amount: {{ payment.amount }} {{ payment.currency }} |
+                        Status: {{ payment.status }} |
+                        Stripe ID: {{ payment.stripePaymentId }} |
+                        Created: {{ payment.createdAt }}
                         <button (click)="selectPayment(payment)">Edit</button>
                         <button (click)="deletePayment(payment.id!)">Delete</button>
                     </ng-container>
+                    <ng-template #userView>
+                        Amount: {{ payment.amount }} {{ payment.currency }} |
+                        Status: {{ payment.status }} |
+                        Paid: {{ payment.createdAt ? (payment.createdAt | date:'yyyy-MM-dd') : 'N/A' }}
+                    </ng-template>
                 </li>
             </ul>
         </div>
