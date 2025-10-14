@@ -16,7 +16,6 @@ export const routes: Routes = [
     { path: 'login', component: LoginComponent },
     { path: 'register', component: RegisterComponent },
 
-
     { path: 'rooms', component: RoomComponent, canActivate: [AuthGuard] },
     { path: 'reservations', component: ReservationComponent, canActivate: [AuthGuard] },
     { path: 'amenities', component: AmenityComponent, canActivate: [AuthGuard] },
@@ -24,4 +23,9 @@ export const routes: Routes = [
     { path: 'payments', component: PaymentComponent, canActivate: [AuthGuard] },
     { path: 'room-types', component: RoomTypeComponent, canActivate: [AuthGuard] },
     { path: 'roles', component: RoleComponent, canActivate: [AuthGuard] },
+    {
+        path: 'profile',
+        canActivate: [AuthGuard],
+        loadComponent: () => import('./components/profile/profile.component').then(m => m.ProfileComponent)
+    },
 ];

@@ -1,0 +1,28 @@
+<div class="profile-container">
+    <div class="profile-content">
+        <h2>User Profile</h2>
+        <div *ngIf="user">
+            <form *ngIf="editMode; else viewMode" (ngSubmit)="saveChanges()">
+                <label>Email</label>
+                <input [(ngModel)]="user.email" name="email" type="email" required>
+                <label>Name</label>
+                <input [(ngModel)]="user.name" name="name" type="text" required>
+                <label>New Password</label>
+                <input [(ngModel)]="password" name="password" type="password" placeholder="Leave blank to keep current">
+                <label>Confirm Password</label>
+                <input [(ngModel)]="confirmPassword" name="confirmPassword" type="password">
+                <div *ngIf="errorMessage" class="error-message">{{ errorMessage }}</div>
+                <div *ngIf="successMessage" class="success-message">{{ successMessage }}</div>
+                <button type="submit">Save</button>
+                <button type="button" (click)="cancelEdit()">Cancel</button>
+            </form>
+            <ng-template #viewMode>
+                <div class="profile-field"><strong>Email:</strong> {{ user.email }}</div>
+                <div class="profile-field"><strong>Name:</strong> {{ user.name }}</div>
+                <button (click)="enableEdit()">Edit Profile</button>
+                <div *ngIf="successMessage" class="success-message">{{ successMessage }}</div>
+            </ng-template>
+        </div>
+        <div *ngIf="!user" class="error-message">Could not load user information.</div>
+    </div>
+</div>

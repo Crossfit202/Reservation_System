@@ -4,6 +4,10 @@ import { BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
+    // For compatibility with components expecting logout()
+    logout() {
+        this.signOut();
+    }
     private apiUrl = 'http://localhost:8080/api/auth';
     private userEmailSubject: BehaviorSubject<string | null>;
     public userEmail$: Observable<string | null>;
