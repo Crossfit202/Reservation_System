@@ -14,7 +14,13 @@ public class UserController {
     private UserService userService;
 
     @GetMapping
-    public List<AppUser> getAllUsers() {
+    public List<AppUser> getAllUsers(@RequestParam(value = "email", required = false) String email) {
+        if (email != null && !email.isEmpty()) {
+            // You may want to make this case-insensitive depending on your DB collation
+            return userService.getAllUsers().stream()
+                    .filter(u -> u.getEmail().equalsIgnoreCase(email))
+                    .toList();
+        }
         return userService.getAllUsers();
     }
 
