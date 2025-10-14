@@ -22,6 +22,8 @@ import { PaymentService } from '../../services/payment.service';
   imports: [CommonModule, FormsModule]
 })
 export class ReservationComponent implements OnInit {
+  upcomingReservations: Reservation[] = [];
+  pastReservations: Reservation[] = [];
   isAdmin: boolean = false;
   reservations: Reservation[] = [];
   selectedReservation: Reservation | null = null;
@@ -110,13 +112,34 @@ export class ReservationComponent implements OnInit {
 
   loadReservations(): void {
     this.reservationService.getAll().subscribe(data => {
+      let filtered: Reservation[];
       if (this.isAdmin) {
-        this.reservations = data;
+        filtered = data;
       } else {
         // Only show reservations for the logged-in user
-        this.reservations = data.filter(r => r.appUserId === this.currentUserId);
+        filtered = data.filter(r => r.appUserId === this.currentUserId);
       }
+      this.reservations = filtered;
+      this.splitReservationsByDate();
     });
+  }
+
+  splitReservationsByDate(): void {
+    const now = new Date();
+    this.upcomingReservations = [];
+    this.pastReservations = [];
+    for (const reservation of this.reservations) {
+      if (reservation.checkOut) {
+        const checkOutDate = new Date(reservation.checkOut);
+        if (checkOutDate >= now) {
+          this.upcomingReservations.push(reservation);
+        } else {
+          this.pastReservations.push(reservation);
+        }
+      } else {
+        this.upcomingReservations.push(reservation);
+      }
+    }
   }
 
   loadUsers(): void {

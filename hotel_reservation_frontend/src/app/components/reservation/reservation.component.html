@@ -32,20 +32,30 @@
 
             <!-- USER: Only list if not roomIdFromQuery -->
             <ng-container *ngIf="!isAdmin && !roomIdFromQuery">
-                <h2>Reservations</h2>
-                <ul>
-                    <li *ngFor="let reservation of reservations">
-                        User: {{ reservation.appUserName }} ({{ reservation.appUserEmail }}) |
-                        Room: {{ reservation.roomNumber }} ({{ reservation.roomType }}) |
+                <h2>Upcoming Reservations</h2>
+                <ul *ngIf="upcomingReservations.length > 0; else noUpcoming">
+                    <li *ngFor="let reservation of upcomingReservations">
+                        Room: {{ reservation.roomNumber }} |
                         Check-in: {{ reservation.checkIn }} |
                         Check-out: {{ reservation.checkOut }} |
-                        Guests: {{ reservation.numGuests }} |
-                        Status: {{ reservation.status }} |
-                        Created: {{ reservation.createdAt }} |
-                        Updated: {{ reservation.updatedAt }}
-                        <!-- No edit/delete for USER -->
+                        Guests: {{ reservation.numGuests }}
                     </li>
                 </ul>
+                <ng-template #noUpcoming>
+                    <div>No upcoming reservations.</div>
+                </ng-template>
+                <h2 style="margin-top:2rem;">Past Reservations</h2>
+                <ul *ngIf="pastReservations.length > 0; else noPast">
+                    <li *ngFor="let reservation of pastReservations">
+                        Room: {{ reservation.roomNumber }} |
+                        Check-in: {{ reservation.checkIn }} |
+                        Check-out: {{ reservation.checkOut }} |
+                        Guests: {{ reservation.numGuests }}
+                    </li>
+                </ul>
+                <ng-template #noPast>
+                    <div>No past reservations.</div>
+                </ng-template>
             </ng-container>
         </div>
 
