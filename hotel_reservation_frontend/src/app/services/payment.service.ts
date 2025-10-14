@@ -19,7 +19,12 @@ export class PaymentService {
     }
 
     create(payment: Payment): Observable<Payment> {
-        const payload: any = { ...payment, reservationId: payment.reservation?.id };
+        // Always send reservationId and stripePaymentId explicitly
+        const payload: any = {
+            ...payment,
+            reservationId: payment.reservation?.id,
+            stripePaymentId: payment.stripePaymentId
+        };
         return this.http.post<Payment>(this.apiUrl, payload);
     }
 

@@ -367,6 +367,7 @@ export class ReservationComponent implements OnInit {
         return;
       }
       if (result.paymentIntent && result.paymentIntent.status === 'succeeded') {
+        console.log('Stripe paymentIntent.id:', result.paymentIntent.id);
         this.paymentSuccess = true;
         this.paymentInProgress = false;
         // Now create the reservation and payment in the backend
@@ -382,7 +383,7 @@ export class ReservationComponent implements OnInit {
     // 1. Create the reservation
     const formatDate = (d: any) => {
       if (!d) return '';
-      if (typeof d === 'string' && d.length === 10 && d.match(/^\d{4}-\d{2}-\d{2}$/)) return d;
+      if (typeof d === 'string' && d.length === 10 && d.match(/^[\d]{4}-[\d]{2}-[\d]{2}$/)) return d;
       const date = new Date(d);
       return date.toISOString().slice(0, 10);
     };
@@ -401,10 +402,11 @@ export class ReservationComponent implements OnInit {
         const payment = {
           reservation: { id: reservation.id },
           amount: amount / 100,
-          currency,
-          status,
-          stripePaymentId
+          currency: currency,
+          status: status,
+          stripePaymentId: stripePaymentId
         };
+        console.log('Payment object sent to backend:', payment);
         this.paymentService.create(payment).subscribe({
           next: () => {
             this.loadReservations();

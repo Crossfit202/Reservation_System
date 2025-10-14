@@ -62,15 +62,7 @@ public class PaymentController {
             }
         }
         // Set stripePaymentId if present
-        if (paymentRequest instanceof com.hotelreservation.dto.PaymentRequest) {
-            try {
-                java.lang.reflect.Method m = paymentRequest.getClass().getMethod("getStripePaymentId");
-                Object val = m.invoke(paymentRequest);
-                if (val != null)
-                    payment.setStripePaymentId(val.toString());
-            } catch (Exception ignored) {
-            }
-        }
+        payment.setStripePaymentId(paymentRequest.getStripePaymentId());
         Payment saved = paymentService.createPayment(payment);
         return ResponseEntity.ok(toPaymentResponse(saved));
     }

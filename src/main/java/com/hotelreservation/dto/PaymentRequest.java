@@ -7,8 +7,17 @@ public class PaymentRequest {
     private String currency;
     private Long reservationId;
     private Long appUserId;
+    private String stripePaymentId;
 
     public PaymentRequest() {
+    }
+
+    public String getStripePaymentId() {
+        return stripePaymentId;
+    }
+
+    public void setStripePaymentId(String stripePaymentId) {
+        this.stripePaymentId = stripePaymentId;
     }
 
     public BigDecimal getAmount() {
