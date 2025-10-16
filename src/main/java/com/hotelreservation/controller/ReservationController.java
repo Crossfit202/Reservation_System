@@ -34,6 +34,9 @@ public class ReservationController {
     @Autowired
     private PaymentService paymentService;
 
+    @Autowired
+    private com.hotelreservation.service.StripeService stripeService;
+
     @GetMapping
     public List<ReservationResponse> getAllReservations() {
         return reservationService.getAllReservations()
@@ -114,11 +117,23 @@ public class ReservationController {
         reservation.setStatus("CANCELED");
         Reservation updated = reservationService.updateReservation(id, reservation);
 
-        // Update associated payment status to REFUNDED
+        // Update associated payment status to REFUNDED and call Stripe refund
         paymentRepository.findByReservation(reservation).ifPresent(payment -> {
-            payment.setStatus("REFUNDED");
+            if (payment.getStripePaymentId() != null && !payment.getStripePaymentId().isEmpty()) {
+                try {
+                    stripeService.refundPayment(payment.getStripePaymentId(), null);
+                    payment.setStatus("REFUNDED");
+                } catch (Exception e) {
+                    // Optionally log or handle Stripe refund error
+                    payment.setStatus("REFUND_FAILED");
+                }
+            } else {
+                // No stripe id, mark as refunded locally if appropriate
+                payment.setStatus("REFUNDED");
+            }
             paymentService.updatePayment(payment.getId(), payment);
         });
+
         return ResponseEntity.ok(new ReservationResponse(updated));
     }
 }
