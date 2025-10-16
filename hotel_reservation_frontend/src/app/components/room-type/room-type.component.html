@@ -1,25 +1,33 @@
-<h2>Room Types</h2>
-<ul>
-    <li *ngFor="let roomType of roomTypes">
-        {{ roomType.name }} - {{ roomType.description }}
-        <button (click)="selectRoomType(roomType)">Edit</button>
-        <button (click)="deleteRoomType(roomType.id!)">Delete</button>
-    </li>
-</ul>
-
-<h3>Add Room Type</h3>
-<form (ngSubmit)="createRoomType()">
-    <input [(ngModel)]="newRoomType.name" name="name" placeholder="Name" required>
-    <input [(ngModel)]="newRoomType.description" name="description" placeholder="Description">
-    <button type="submit">Add</button>
-</form>
-
-<div *ngIf="selectedRoomType">
-    <h3>Edit Room Type</h3>
-    <form (ngSubmit)="updateRoomType()">
-        <input [(ngModel)]="selectedRoomType!.name" name="editName" required>
-        <input [(ngModel)]="selectedRoomType!.description" name="editDescription">
-        <button type="submit">Update</button>
-        <button type="button" (click)="selectedRoomType = null">Cancel</button>
-    </form>
+<div class="room-types-container">
+    <div class="room-types-content room-types-row">
+        <div class="room-types-list">
+            <h2>Room Types</h2>
+            <ul>
+                <li *ngFor="let roomType of roomTypes">
+                    <div><strong>{{ roomType.name }}</strong> - {{ roomType.description }}</div>
+                    <div>
+                        <button (click)="selectRoomType(roomType)">Edit</button>
+                        <button (click)="deleteRoomType(roomType.id!)">Delete</button>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <div class="room-type-form">
+            <h3>Add Room Type</h3>
+            <form (ngSubmit)="createRoomType()">
+                <input [(ngModel)]="newRoomType.name" name="name" placeholder="Name" required>
+                <input [(ngModel)]="newRoomType.description" name="description" placeholder="Description">
+                <button type="submit">Add</button>
+            </form>
+            <div *ngIf="selectedRoomType">
+                <h3>Edit Room Type</h3>
+                <form (ngSubmit)="updateRoomType()">
+                    <input [(ngModel)]="selectedRoomType!.name" name="editName" required>
+                    <input [(ngModel)]="selectedRoomType!.description" name="editDescription">
+                    <button type="submit">Update</button>
+                    <button type="button" (click)="selectedRoomType = null">Cancel</button>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>

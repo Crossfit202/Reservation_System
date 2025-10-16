@@ -1,25 +1,33 @@
-<h2>Amenities</h2>
-<ul>
-    <li *ngFor="let amenity of amenities">
-        {{ amenity.name }} - {{ amenity.description }}
-        <button (click)="selectAmenity(amenity)">Edit</button>
-        <button (click)="deleteAmenity(amenity.id!)">Delete</button>
-    </li>
-</ul>
-
-<h3>Add Amenity</h3>
-<form (ngSubmit)="createAmenity()">
-    <input [(ngModel)]="newAmenity.name" name="name" placeholder="Name" required>
-    <input [(ngModel)]="newAmenity.description" name="description" placeholder="Description">
-    <button type="submit">Add</button>
-</form>
-
-<div *ngIf="selectedAmenity">
-    <h3>Edit Amenity</h3>
-    <form (ngSubmit)="updateAmenity()">
-        <input [(ngModel)]="selectedAmenity!.name" name="editName" required>
-        <input [(ngModel)]="selectedAmenity!.description" name="editDescription">
-        <button type="submit">Update</button>
-        <button type="button" (click)="selectedAmenity = null">Cancel</button>
-    </form>
+<div class="amenities-container">
+    <div class="amenities-content amenities-row">
+        <div class="amenities-list">
+            <h2>Amenities</h2>
+            <ul>
+                <li *ngFor="let amenity of amenities">
+                    <div><strong>{{ amenity.name }}</strong> - {{ amenity.description }}</div>
+                    <div>
+                        <button (click)="selectAmenity(amenity)">Edit</button>
+                        <button (click)="deleteAmenity(amenity.id!)">Delete</button>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <div class="amenity-form">
+            <h3>Add Amenity</h3>
+            <form (ngSubmit)="createAmenity()">
+                <input [(ngModel)]="newAmenity.name" name="name" placeholder="Name" required>
+                <input [(ngModel)]="newAmenity.description" name="description" placeholder="Description">
+                <button type="submit">Add</button>
+            </form>
+            <div *ngIf="selectedAmenity">
+                <h3>Edit Amenity</h3>
+                <form (ngSubmit)="updateAmenity()">
+                    <input [(ngModel)]="selectedAmenity!.name" name="editName" required>
+                    <input [(ngModel)]="selectedAmenity!.description" name="editDescription">
+                    <button type="submit">Update</button>
+                    <button type="button" (click)="selectedAmenity = null">Cancel</button>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>

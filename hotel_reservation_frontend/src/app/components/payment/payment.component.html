@@ -5,17 +5,36 @@
             <ul>
                 <li *ngFor="let payment of payments">
                     <ng-container *ngIf="isAdmin; else userView">
-                        Amount: {{ payment.amount }} {{ payment.currency }} |
-                        Status: {{ payment.status }} |
-                        Stripe ID: {{ payment.stripePaymentId }} |
-                        Created: {{ payment.createdAt }}
-                        <button (click)="selectPayment(payment)">Edit</button>
-                        <button (click)="deletePayment(payment.id!)">Delete</button>
+                        <div class="payment-card">
+
+                            <div><strong>Amount:</strong> {{ payment.amount }}</div>
+                            <div>
+                                <strong>Status:</strong>
+                                <span [ngClass]="{
+                                    'status-refunded': payment.status === 'REFUNDED',
+                                    'status-successful': payment.status === 'SUCCESSFUL'
+                                }">{{ payment.status }}</span>
+                            </div>
+                            <div><strong>Stripe ID:</strong> {{ payment.stripePaymentId }}</div>
+                            <div class="payment-actions">
+                                <button (click)="selectPayment(payment)">Edit</button>
+                                <button (click)="deletePayment(payment.id!)">Delete</button>
+                            </div>
+                        </div>
                     </ng-container>
                     <ng-template #userView>
-                        Amount: {{ payment.amount }} {{ payment.currency }} |
-                        Status: {{ payment.status }} |
-                        Paid: {{ payment.createdAt ? (payment.createdAt | date:'yyyy-MM-dd') : 'N/A' }}
+                        <div class="payment-card">
+                            <div><strong>Paid:</strong> {{ payment.createdAt ? (payment.createdAt | date:'yyyy-MM-dd') :
+                                'N/A' }}</div>
+                            <div><strong>Amount:</strong> ${{ payment.amount }}</div>
+                            <div>
+                                <strong>Status:</strong>
+                                <span [ngClass]="{
+                                    'status-refunded': payment.status === 'REFUNDED',
+                                    'status-successful': payment.status === 'SUCCESSFUL'
+                                }">{{ payment.status }}</span>
+                            </div>
+                        </div>
                     </ng-template>
                 </li>
             </ul>

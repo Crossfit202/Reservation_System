@@ -11,64 +11,95 @@
         <div class="reservations-list">
             <!-- ADMIN: Show both list and add form -->
             <ng-container *ngIf="isAdmin">
-                <h2>Reservations</h2>
-                <ul>
-                    <li *ngFor="let reservation of reservations">
-                        User: {{ reservation.appUserName }} ({{ reservation.appUserEmail }}) |
-                        Room: {{ reservation.roomNumber }} ({{ reservation.roomType }}) |
-                        Check-in: {{ reservation.checkIn }} |
-                        Check-out: {{ reservation.checkOut }} |
-                        Guests: {{ reservation.numGuests }} |
-                        Status: {{ reservation.status }} |
-                        Created: {{ reservation.createdAt }} |
-                        Updated: {{ reservation.updatedAt }}
-                        <div class="reservation-actions">
-                            <button (click)="selectReservation(reservation)">Edit</button>
-                            <button (click)="deleteReservation(reservation.id!)">Delete</button>
+                <h2
+                    style="margin-top:0; position:sticky; top:0; background:rgba(255,255,255,0.95); z-index:2; padding-top:1rem;">
+                    Reservations</h2>
+                <div class="admin-reservation-list-scroll">
+                    <div class="admin-reservation-list">
+                        <div *ngFor="let reservation of reservations" class="admin-reservation-card">
+                            <div class="admin-reservation-header">
+                                <span class="admin-reservation-user"><strong>User:</strong> {{ reservation.appUserName
+                                    }}
+                                    <span class="admin-reservation-email">({{ reservation.appUserEmail }})</span></span>
+                                <span class="admin-reservation-status"
+                                    [ngClass]="{'status-canceled': reservation.status === 'CANCELED', 'status-confirmed': reservation.status === 'CONFIRMED'}">{{
+                                    reservation.status }}</span>
+                            </div>
+                            <div class="admin-reservation-details">
+                                <div><strong>Room:</strong> {{ reservation.roomNumber }} <span
+                                        class="admin-reservation-roomtype">({{ reservation.roomType }})</span></div>
+                                <div><strong>Check-in:</strong> {{ reservation.checkIn }}</div>
+                                <div><strong>Check-out:</strong> {{ reservation.checkOut }}</div>
+                                <div><strong>Guests:</strong> {{ reservation.numGuests }}</div>
+                                <div><strong>Created:</strong> {{ reservation.createdAt }}</div>
+                                <div><strong>Updated:</strong> {{ reservation.updatedAt }}</div>
+                            </div>
+                            <div class="reservation-actions">
+                                <button (click)="selectReservation(reservation)">Edit</button>
+                                <button (click)="deleteReservation(reservation.id!)">Delete</button>
+                            </div>
                         </div>
-                    </li>
-                </ul>
+                    </div>
+                </div>
             </ng-container>
 
             <!-- USER: Only list if not roomIdFromQuery -->
             <ng-container *ngIf="!isAdmin && !roomIdFromQuery">
                 <h2>Upcoming Reservations</h2>
-                <ul *ngIf="upcomingReservations.length > 0; else noUpcoming">
-                    <li *ngFor="let reservation of upcomingReservations">
-                        Room: {{ reservation.roomNumber }} |
-                        Check-in: {{ reservation.checkIn }} |
-                        Check-out: {{ reservation.checkOut }} |
-                        Guests: {{ reservation.numGuests }} |
-                        Status: {{ reservation.status }}
-                        <button *ngIf="canCancel(reservation) && reservation.status !== 'CANCELED'"
-                            (click)="openCancelModal(reservation.id)">Cancel</button>
-                        <span *ngIf="reservation.status === 'CANCELED'"
-                            style="color:#b00020;font-weight:500;">Cancelled</span>
-                        <!-- Cancel Confirmation Modal -->
-                        <div class="modal-backdrop" *ngIf="showCancelModal">
-                            <div class="modal">
-                                <p>Are you sure you want to cancel this reservation?</p>
-                                <button (click)="confirmCancelReservation()">Yes, Cancel</button>
-                                <button (click)="closeCancelModal()">No</button>
+                <div class="user-reservation-list">
+                    <div *ngIf="upcomingReservations.length > 0; else noUpcoming">
+                        <div *ngFor="let reservation of upcomingReservations" class="user-reservation-card">
+                            <div class="user-reservation-details">
+                                <div><strong>Room:</strong> {{ reservation.roomNumber }} <span
+                                        class="user-reservation-roomtype">({{ reservation.roomType }})</span></div>
+                                <div><strong>Check-in:</strong> {{ reservation.checkIn }}</div>
+                                <div><strong>Check-out:</strong> {{ reservation.checkOut }}</div>
+                                <div><strong>Guests:</strong> {{ reservation.numGuests }}</div>
+                            </div>
+                            <div class="user-reservation-header">
+                                <span class="user-reservation-status"
+                                    [ngClass]="{'status-canceled': reservation.status === 'CANCELED', 'status-confirmed': reservation.status === 'CONFIRMED'}">{{
+                                    reservation.status }}</span>
+                                <button *ngIf="canCancel(reservation) && reservation.status !== 'CANCELED'"
+                                    (click)="openCancelModal(reservation.id)">Cancel</button>
+                                <span *ngIf="reservation.status === 'CANCELED'"
+                                    style="color:#b00020;font-weight:500;">Cancelled</span>
+                            </div>
+                            <!-- Cancel Confirmation Modal -->
+                            <div class="modal-backdrop" *ngIf="showCancelModal">
+                                <div class="modal">
+                                    <p>Are you sure you want to cancel this reservation?</p>
+                                    <button (click)="confirmCancelReservation()">Yes, Cancel</button>
+                                    <button (click)="closeCancelModal()">No</button>
+                                </div>
                             </div>
                         </div>
-                    </li>
-                </ul>
+                    </div>
+                </div>
                 <ng-template #noUpcoming>
                     <div>No upcoming reservations.</div>
                 </ng-template>
                 <h2 style="margin-top:2rem;">Past Reservations</h2>
-                <ul *ngIf="pastReservations.length > 0; else noPast">
-                    <li *ngFor="let reservation of pastReservations">
-                        Room: {{ reservation.roomNumber }} |
-                        Check-in: {{ reservation.checkIn }} |
-                        Check-out: {{ reservation.checkOut }} |
-                        Guests: {{ reservation.numGuests }} |
-                        Status: {{ reservation.status }}
-                        <span *ngIf="reservation.status === 'CANCELED'"
-                            style="color:#b00020;font-weight:500;">Cancelled</span>
-                    </li>
-                </ul>
+                <div class="user-reservation-list">
+                    <div *ngIf="pastReservations.length > 0; else noPast">
+                        <div *ngFor="let reservation of pastReservations" class="user-reservation-card">
+                            <div class="user-reservation-header">
+                                <span class="user-reservation-status"
+                                    [ngClass]="{'status-canceled': reservation.status === 'CANCELED', 'status-confirmed': reservation.status === 'CONFIRMED'}">{{
+                                    reservation.status }}</span>
+                                <span *ngIf="reservation.status === 'CANCELED'"
+                                    style="color:#b00020;font-weight:500;">Cancelled</span>
+                            </div>
+                            <div class="user-reservation-details">
+                                <div><strong>Room:</strong> {{ reservation.roomNumber }} <span
+                                        class="user-reservation-roomtype">({{ reservation.roomType }})</span></div>
+                                <div><strong>Check-in:</strong> {{ reservation.checkIn }}</div>
+                                <div><strong>Check-out:</strong> {{ reservation.checkOut }}</div>
+                                <div><strong>Guests:</strong> {{ reservation.numGuests }}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <ng-template #noPast>
                     <div>No past reservations.</div>
                 </ng-template>

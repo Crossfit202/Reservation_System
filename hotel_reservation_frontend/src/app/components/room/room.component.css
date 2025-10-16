@@ -63,8 +63,22 @@ body {
     object-fit: cover;
 }
 
+
 .room-actions button {
+    background-color: #0F9764;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 0.7rem 1.2rem;
+    font-weight: 500;
+    cursor: pointer;
     margin-right: 0.5rem;
+    transition: background 0.2s, box-shadow 0.2s;
+}
+
+.room-actions button:hover {
+    background-color: #218838;
+    box-shadow: 0 2px 8px #0F9764;
 }
 
 .available {
@@ -119,4 +133,39 @@ body {
     margin-bottom: 0.2rem;
     color: #333;
     display: block;
+}
+
+.room-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 2rem;
+}
+
+.room-card {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 16px rgba(0, 0, 0, 0.10);
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    font-size: 1.2rem;
+}
+
+.room-image {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+}
+
+.room-details {
+    margin-bottom: 1rem;
+}
+
+.room-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-end;
 }

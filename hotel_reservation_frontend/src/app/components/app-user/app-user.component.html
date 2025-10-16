@@ -1,36 +1,44 @@
-<h2>Users</h2>
-<ul>
-    <li *ngFor="let user of users">
-        {{ user.name }} - {{ user.email }}
-        <button (click)="selectUser(user)">Edit</button>
-        <button (click)="deleteUser(user.id!)">Delete</button>
-    </li>
-</ul>
-
-<h3>Add User</h3>
-<form (ngSubmit)="createUser()">
-    <input [(ngModel)]="newUser.name" name="name" placeholder="Name" required>
-    <input [(ngModel)]="newUser.email" name="email" placeholder="Email" required>
-    <input [(ngModel)]="newUser.password" name="password" placeholder="Password" type="password" required>
-    <label>Roles:</label>
-    <select [(ngModel)]="newUser.roles" name="roles" multiple required>
-        <option *ngFor="let role of roles" [ngValue]="role">{{ role.name }}</option>
-    </select>
-    <button type="submit">Add</button>
-</form>
-
-<div *ngIf="selectedUser">
-    <h3>Edit User</h3>
-    <form (ngSubmit)="updateUser()">
-        <input [(ngModel)]="selectedUser!.name" name="editName" required>
-        <input [(ngModel)]="selectedUser!.email" name="editEmail" required>
-        <input [(ngModel)]="selectedUser!.password" name="editPassword" placeholder="New Password (leave blank to keep)"
-            type="password">
-        <label>Roles:</label>
-        <select [(ngModel)]="selectedUser!.roles" name="editRoles" multiple required>
-            <option *ngFor="let role of roles" [ngValue]="role">{{ role.name }}</option>
-        </select>
-        <button type="submit">Update</button>
-        <button type="button" (click)="selectedUser = null">Cancel</button>
-    </form>
+<div class="users-container">
+    <div class="users-content users-row">
+        <div class="users-list">
+            <h2>Users</h2>
+            <ul>
+                <li *ngFor="let user of users">
+                    <div><strong>{{ user.name }}</strong> - {{ user.email }}</div>
+                    <div>
+                        <button (click)="selectUser(user)">Edit</button>
+                        <button (click)="deleteUser(user.id!)">Delete</button>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <div class="user-form">
+            <h3>Add User</h3>
+            <form (ngSubmit)="createUser()">
+                <input [(ngModel)]="newUser.name" name="name" placeholder="Name" required>
+                <input [(ngModel)]="newUser.email" name="email" placeholder="Email" required>
+                <input [(ngModel)]="newUser.password" name="password" placeholder="Password" type="password" required>
+                <label>Roles:</label>
+                <select [(ngModel)]="newUser.roles" name="roles" multiple required>
+                    <option *ngFor="let role of roles" [ngValue]="role">{{ role.name }}</option>
+                </select>
+                <button type="submit">Add</button>
+            </form>
+            <div *ngIf="selectedUser">
+                <h3>Edit User</h3>
+                <form (ngSubmit)="updateUser()">
+                    <input [(ngModel)]="selectedUser!.name" name="editName" required>
+                    <input [(ngModel)]="selectedUser!.email" name="editEmail" required>
+                    <input [(ngModel)]="selectedUser!.password" name="editPassword"
+                        placeholder="New Password (leave blank to keep)" type="password">
+                    <label>Roles:</label>
+                    <select [(ngModel)]="selectedUser!.roles" name="editRoles" multiple required>
+                        <option *ngFor="let role of roles" [ngValue]="role">{{ role.name }}</option>
+                    </select>
+                    <button type="submit">Update</button>
+                    <button type="button" (click)="selectedUser = null">Cancel</button>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>

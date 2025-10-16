@@ -101,11 +101,25 @@ VALUES (
   '$2a$10$CTvPtotuevmxdt3MSRsyBeclmyo5wqzqpvSEJTfRvD1ner.zTumhC'
 );
 
+-- Insert default user (paul, p@gmail.com, password: Securepassword123!)
+INSERT INTO app_user (email, name, password)
+VALUES (
+  'p@gmail.com',
+  'paul',
+  '$2a$10$CTvPtotuevmxdt3MSRsyBeclmyo5wqzqpvSEJTfRvD1ner.zTumhC'
+);
+
 -- Assign ADMIN role to the user
 INSERT INTO app_user_roles (user_id, role_id)
 SELECT u.id, r.id
 FROM app_user u, role r
 WHERE u.email = 'j@gmail.com' AND r.name = 'ADMIN';
+
+-- Assign USER role to the new user
+INSERT INTO app_user_roles (user_id, role_id)
+SELECT u.id, r.id
+FROM app_user u, role r
+WHERE u.email = 'p@gmail.com' AND r.name = 'USER';
 
 -- Insert default room types
 INSERT INTO room_type (name, description, image_name) VALUES

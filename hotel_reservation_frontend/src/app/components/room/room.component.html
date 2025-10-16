@@ -2,19 +2,20 @@
     <div class="rooms-content">
         <div class="rooms-list">
             <h2>Rooms</h2>
-            <ul>
-                <li *ngFor="let room of rooms">
-                    <div class="room-info">
-                        <img *ngIf="room.roomType?.imageName" class="room-image"
-                            [src]="'assets/room-types/' + room.roomType?.imageName"
-                            [alt]="room.roomType?.name || 'Room Type'">
+            <div class="room-grid">
+                <div class="room-card" *ngFor="let room of rooms">
+                    <img *ngIf="room.roomType?.imageName" class="room-image"
+                        [src]="'assets/room-types/' + room.roomType?.imageName"
+                        [alt]="room.roomType?.name || 'Room Type'">
+                    <div class="room-details">
+                        <strong>#{{ room.roomNumber }}</strong>
+                        <div>{{ room.type }} | {{ room.capacity }} guests | ${{ room.price }}</div>
                         <div>
-                            <strong>#{{ room.roomNumber }}</strong> | {{ room.type }} | {{ room.capacity }} guests | ${{
-                            room.price }} |
                             <span [class.available]="room.available" [class.unavailable]="!room.available">
                                 {{ room.available ? 'Available' : 'Unavailable' }}
                             </span>
-                            <br>
+                        </div>
+                        <div class="room-amenities">
                             <small>
                                 Amenities:
                                 <span *ngIf="room.amenitiesSet?.length; else noAmenities">
@@ -35,8 +36,8 @@
                             <button (click)="reserveRoom(room)">Reserve</button>
                         </ng-template>
                     </div>
-                </li>
-            </ul>
+                </div>
+            </div>
         </div>
         <div class="room-form" *ngIf="isAdmin || selectedRoom">
             <h3 *ngIf="!selectedRoom">Add Room</h3>

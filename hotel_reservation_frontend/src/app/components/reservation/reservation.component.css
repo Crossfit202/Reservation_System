@@ -1,3 +1,71 @@
+/* USER reservation list styles (similar to admin) */
+.user-reservation-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    margin-top: 1rem;
+}
+
+.user-reservation-card {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+    padding: 1.5rem 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+    border-left: 6px solid #198754;
+    position: relative;
+    transition: box-shadow 0.2s;
+}
+
+.user-reservation-card:hover {
+    box-shadow: 0 4px 18px rgba(25, 135, 84, 0.15);
+}
+
+.user-reservation-header {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin-bottom: 0.5rem;
+    gap: 1rem;
+}
+
+.user-reservation-status {
+    font-weight: 600;
+    padding: 0.3rem 0.8rem;
+    border-radius: 16px;
+    font-size: 0.98rem;
+    background: #e9fbe7;
+    color: #198754;
+    border: 1px solid #198754;
+}
+
+.user-reservation-status.status-canceled {
+    background: #ffeaea;
+    color: #b00020;
+    border: 1px solid #b00020;
+}
+
+.user-reservation-status.status-confirmed {
+    background: #e9fbe7;
+    color: #198754;
+    border: 1px solid #198754;
+}
+
+.user-reservation-details {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.5rem 2rem;
+    font-size: 1rem;
+    color: #333;
+}
+
+.user-reservation-roomtype {
+    color: #888;
+    font-size: 0.95rem;
+}
+
 /* Modal Backdrop */
 .modal-backdrop {
     position: fixed;
@@ -8,6 +76,18 @@
     background: rgba(0, 0, 0, 0.4);
     display: flex;
     align-items: center;
+
+    /* Ensure admin reservation list is scrollable and contained */
+    .admin-reservation-list {
+        max-height: 68vh;
+        overflow-y: auto;
+        padding-right: 8px;
+    }
+
+    .admin-reservation-card {
+        margin-bottom: 0.5rem;
+    }
+
     justify-content: center;
     z-index: 1000;
 }
@@ -15,21 +95,30 @@
 /* Modal Popup */
 .modal {
     background: #fff;
-    border-radius: 8px;
-    box-shadow: 0 2px 16px rgba(0, 0, 0, 0.25);
-    padding: 2rem 2.5rem;
-    min-width: 300px;
-    max-width: 90vw;
+    border-radius: 10px;
+    box-shadow: 0 2px 16px rgba(0, 0, 0, 0.18);
+    padding: 2.5rem 2.5rem 2rem 2.5rem;
+    min-width: 320px;
+    max-width: 95vw;
     text-align: center;
     z-index: 1001;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.modal p {
+    margin-bottom: 1.5rem;
+    font-size: 1.15rem;
+    color: #222;
 }
 
 .modal button {
-    margin: 0 0.5rem;
-    padding: 0.5rem 1.2rem;
+    margin: 0 0.7rem;
+    padding: 0.7rem 1.5rem;
     border: none;
-    border-radius: 4px;
-    background: #1976d2;
+    border-radius: 5px;
+    background: #198754;
     color: #fff;
     font-size: 1rem;
     cursor: pointer;
@@ -48,50 +137,88 @@
     background: #888;
 }
 
-/* Add spacing between datepicker labels and input fields */
-.mat-form-field-label {
-    margin-bottom: 0.5rem !important;
-    display: block !important;
+/* Move admin reservation card styles to global scope */
+.admin-reservation-list-scroll {
+    max-height: 68vh;
+    overflow-y: auto;
+    padding-top: 1rem;
+    padding-right: 8px;
 }
 
-/* Style reserved (disabled) days in the datepicker with a dark grey background */
-::ng-deep .mat-calendar-body-disabled>.mat-calendar-body-cell-content {
-    background: #444 !important;
-    color: #fff !important;
-    opacity: 1 !important;
-    border-radius: 50% !important;
+.admin-reservation-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    margin-top: 0;
 }
 
-/* Force solid background for Angular Material datepicker popup and calendar */
-::ng-deep .cdk-overlay-pane,
-::ng-deep .mat-datepicker-content,
-::ng-deep .mat-calendar,
-::ng-deep .mat-calendar-table,
-::ng-deep .mat-calendar-body,
-::ng-deep .mat-calendar-content {
-    background: #fff !important;
-    opacity: 1 !important;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35) !important;
-    border-radius: 12px !important;
+.admin-reservation-card {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+    padding: 1.5rem 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+    border-left: 6px solid #198754;
+    position: relative;
+    transition: box-shadow 0.2s;
 }
 
-::ng-deep .mat-calendar-body-cell-content,
-::ng-deep .mat-calendar-body-label,
-::ng-deep .mat-calendar-arrow,
-::ng-deep .mat-calendar-period-button {
-    color: #198754 !important;
+.admin-reservation-card:hover {
+    box-shadow: 0 4px 18px rgba(25, 135, 84, 0.15);
 }
 
-::ng-deep .mat-calendar-body-selected,
-::ng-deep .mat-calendar-body-active {
-    background: #198754 !important;
-    color: #fff !important;
+.admin-reservation-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
 }
 
-/* Make Angular Material datepicker popup modal fully opaque and visually distinct */
-.cdk-overlay-pane {
-    background: none !important;
-    box-shadow: none !important;
+.admin-reservation-user {
+    font-size: 1.08rem;
+    color: #198754;
+}
+
+.admin-reservation-email {
+    color: #555;
+    font-size: 0.98rem;
+}
+
+.admin-reservation-status {
+    font-weight: 600;
+    padding: 0.3rem 0.8rem;
+    border-radius: 16px;
+    font-size: 0.98rem;
+    background: #e9fbe7;
+    color: #198754;
+    border: 1px solid #198754;
+}
+
+.admin-reservation-status.status-canceled {
+    background: #ffeaea;
+    color: #b00020;
+    border: 1px solid #b00020;
+}
+
+.admin-reservation-status.status-confirmed {
+    background: #e9fbe7;
+    color: #198754;
+    border: 1px solid #198754;
+}
+
+.admin-reservation-details {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.5rem 2rem;
+    font-size: 1rem;
+    color: #333;
+}
+
+.admin-reservation-roomtype {
+    color: #888;
+    font-size: 0.95rem;
 }
 
 .mat-datepicker-content {
@@ -233,6 +360,8 @@
     align-items: center;
     padding: 0 1.5rem;
     box-sizing: border-box;
+    margin-top: 70px;
+    /* Adjust to match header height */
 }
 
 .reservations-content {
@@ -241,21 +370,87 @@
     width: 100%;
     max-width: 1100px;
     background: rgba(255, 255, 255, 0.95);
-    border-radius: 16px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-    padding: 2rem;
-}
 
-.reservations-list {
-    flex: 2;
-    overflow-y: auto;
-    max-height: 70vh;
-}
+    /* Admin reservation list improvements */
+    .admin-reservation-list {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+        margin-top: 1rem;
+    }
 
-.reservations-list ul {
-    list-style: none;
+    .admin-reservation-card {
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+        padding: 1.5rem 2rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.7rem;
+        border-left: 6px solid #198754;
+        position: relative;
+        transition: box-shadow 0.2s;
+    }
+
+    .admin-reservation-card:hover {
+        box-shadow: 0 4px 18px rgba(25, 135, 84, 0.15);
+    }
+
+    .admin-reservation-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 0.5rem;
+    }
+
+    .admin-reservation-user {
+        font-size: 1.08rem;
+        color: #198754;
+    }
+
+    .admin-reservation-email {
+        color: #555;
+        font-size: 0.98rem;
+    }
+
+    .admin-reservation-status {
+        font-weight: 600;
+        padding: 0.3rem 0.8rem;
+        border-radius: 16px;
+        font-size: 0.98rem;
+        background: #e9fbe7;
+        color: #198754;
+        border: 1px solid #198754;
+    }
+
+    .admin-reservation-status.status-canceled {
+        background: #ffeaea;
+        color: #b00020;
+        border: 1px solid #b00020;
+    }
+
+    .admin-reservation-status.status-confirmed {
+        background: #e9fbe7;
+        color: #198754;
+        border: 1px solid #198754;
+    }
+
+    .admin-reservation-details {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.5rem 2rem;
+        font-size: 1rem;
+        color: #333;
+    }
+
+    .admin-reservation-roomtype {
+        color: #888;
+        font-size: 0.95rem;
+    }
+
     padding: 0;
 }
+
 
 .reservations-list li {
     margin-bottom: 1.5rem;
@@ -264,6 +459,23 @@
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
+}
+
+.reservations-list button {
+    background-color: #0F9764;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 0.7rem 1.2rem;
+    font-weight: 500;
+    cursor: pointer;
+    margin-right: 0.5rem;
+    transition: background 0.2s, box-shadow 0.2s;
+}
+
+.reservations-list button:hover {
+    background-color: #218838;
+    box-shadow: 0 2px 8px #0F9764;
 }
 
 .reservation-actions button {

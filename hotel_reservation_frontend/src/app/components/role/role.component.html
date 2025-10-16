@@ -1,23 +1,31 @@
-<h2>Roles</h2>
-<ul>
-    <li *ngFor="let role of roles">
-        {{ role.name }}
-        <button (click)="selectRole(role)">Edit</button>
-        <button (click)="deleteRole(role.id!)">Delete</button>
-    </li>
-</ul>
-
-<h3>Add Role</h3>
-<form (ngSubmit)="createRole()">
-    <input [(ngModel)]="newRole.name" name="name" placeholder="Role Name" required>
-    <button type="submit">Add</button>
-</form>
-
-<div *ngIf="selectedRole">
-    <h3>Edit Role</h3>
-    <form (ngSubmit)="updateRole()">
-        <input [(ngModel)]="selectedRole!.name" name="editName" required>
-        <button type="submit">Update</button>
-        <button type="button" (click)="selectedRole = null">Cancel</button>
-    </form>
+<div class="roles-container">
+    <div class="roles-content roles-row">
+        <div class="roles-list">
+            <h2>Roles</h2>
+            <ul>
+                <li *ngFor="let role of roles">
+                    <div><strong>{{ role.name }}</strong></div>
+                    <div>
+                        <button (click)="selectRole(role)">Edit</button>
+                        <button (click)="deleteRole(role.id!)">Delete</button>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <div class="role-form">
+            <h3>Add Role</h3>
+            <form (ngSubmit)="createRole()">
+                <input [(ngModel)]="newRole.name" name="name" placeholder="Role Name" required>
+                <button type="submit">Add</button>
+            </form>
+            <div *ngIf="selectedRole">
+                <h3>Edit Role</h3>
+                <form (ngSubmit)="updateRole()">
+                    <input [(ngModel)]="selectedRole!.name" name="editName" required>
+                    <button type="submit">Update</button>
+                    <button type="button" (click)="selectedRole = null">Cancel</button>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>
