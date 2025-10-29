@@ -5,12 +5,74 @@
 
 body,
 html {
-    /* font-family: 'Underland', sans-serif; */
-
     font-family: 'Morning Sweetest', sans-serif;
-
     font-size: 1rem;
 }
+
+
+.cdk-overlay-container .mat-datepicker-content-container,
+.cdk-overlay-container .mat-datepicker-content,
+.cdk-overlay-container .mat-calendar,
+.cdk-overlay-container .mat-calendar-table,
+.cdk-overlay-container .mat-calendar-body,
+.cdk-overlay-container .mat-calendar-content {
+    background: #fff !important;
+    color: black !important;
+    border-radius: 10px !important;
+    box-shadow: 0 12px 40px rgba(25, 135, 84, 0.18) !important;
+}
+
+/* Day cells */
+.cdk-overlay-container .mat-calendar .mat-calendar-body-cell-content {
+    color: black !important;
+    width: 44px !important;
+    height: 44px !important;
+    line-height: 44px !important;
+    border-radius: 8px !important;
+    transition: background 120ms ease, transform 120ms ease !important;
+}
+
+/* Selected / active day */
+.cdk-overlay-container .mat-calendar .mat-calendar-body-selected .mat-calendar-body-cell-content,
+.cdk-overlay-container .mat-calendar .mat-calendar-body-active .mat-calendar-body-cell-content {
+    background: #145c32 !important;
+    /* darker green */
+    color: #fff !important;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.18) !important;
+}
+
+/* Disabled (reserved) days: dark grey capsule and no pointer events */
+.cdk-overlay-container .mat-calendar .mat-calendar-body-cell.mat-calendar-body-disabled>.mat-calendar-body-cell-content,
+.cdk-overlay-container .mat-calendar .mat-calendar-body-cell[aria-disabled="true"]>.mat-calendar-body-cell-content,
+.cdk-overlay-container .mat-calendar button[disabled]>.mat-calendar-body-cell-content,
+.cdk-overlay-container .mat-calendar button[aria-disabled="true"]>.mat-calendar-body-cell-content {
+    background: #333 !important;
+    color: #bbb !important;
+    opacity: 1 !important;
+    pointer-events: none !important;
+    border-radius: 8px !important;
+}
+
+/* Make sure hover doesn't affect disabled cells */
+.cdk-overlay-container .mat-calendar .mat-calendar-body-cell.mat-calendar-body-disabled:hover>.mat-calendar-body-cell-content,
+.cdk-overlay-container .mat-calendar .mat-calendar-body-cell[aria-disabled="true"]:hover>.mat-calendar-body-cell-content {
+    transform: none !important;
+    background: #333 !important;
+}
+
+/* Month header / period button color */
+.cdk-overlay-container .mat-calendar .mat-calendar-period-button,
+.cdk-overlay-container .mat-calendar .mat-calendar-arrow {
+    color: black !important;
+}
+
+/* Inputs (non-overlay) — keep them neutral but aligned to theme */
+.mat-form-field-appearance-fill .mat-form-field-flex {
+    background: #fff !important;
+    border-radius: 6px !important;
+}
+
+
 
 body,
 .welcome-container {

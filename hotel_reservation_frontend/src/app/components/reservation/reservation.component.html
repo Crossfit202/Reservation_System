@@ -118,7 +118,7 @@
                         </option>
                     </select>
                     <select [(ngModel)]="newReservation.roomId" name="roomId" required
-                        [disabled]="roomIdFromQuery !== null">
+                        [disabled]="roomIdFromQuery !== null" (ngModelChange)="updateReservedDates()">
                         <option value="" disabled selected>Select Room</option>
                         <option *ngFor="let room of rooms" [value]="room.id">{{ room.roomNumber }}</option>
                     </select>
@@ -141,7 +141,7 @@
                 <form (ngSubmit)="startPaymentProcess()">
                     <input type="text" [value]="currentUserDisplayName" disabled>
                     <select [(ngModel)]="newReservation.roomId" name="roomId" required
-                        [disabled]="roomIdFromQuery !== null">
+                        [disabled]="roomIdFromQuery !== null" (ngModelChange)="updateReservedDates()">
                         <option value="" disabled selected>Select Room</option>
                         <option *ngFor="let room of rooms" [value]="room.id">{{ room.roomNumber }}</option>
                     </select>

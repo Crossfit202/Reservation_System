@@ -207,6 +207,23 @@ export class ReservationComponent implements OnInit {
     this.reservedDates = reserved;
   }
 
+  /**
+   * Returns true if the given [start, end) date range overlaps any reserved dates for the currently selected room.
+   * start/end may be string or Date. The end date is exclusive (checkout day is allowed to be selected by next guest).
+   */
+  private rangeOverlapsReserved(start: any, end: any): boolean {
+    if (!start || !end) return false;
+    const s = new Date(start);
+    const e = new Date(end);
+    for (let d = new Date(s); d < e; d.setDate(d.getDate() + 1)) {
+      const dStr = d.toISOString().slice(0, 10);
+      if (this.reservedDates.some(rd => rd.toISOString().slice(0, 10) === dStr)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   splitReservationsByDate(): void {
     const now = new Date();
     this.upcomingReservations = [];
@@ -275,7 +292,13 @@ export class ReservationComponent implements OnInit {
       this.errorMessage = `Cannot reserve for more than ${selectedRoom.capacity} guests in this room.`;
       return;
     }
+    // Ensure reserved dates are up-to-date for the chosen room
     this.updateReservedDates();
+    // Prevent double-booking client-side by checking overlap
+    if (this.rangeOverlapsReserved(this.newReservation.checkIn, this.newReservation.checkOut)) {
+      this.errorMessage = 'Selected dates overlap existing reservations for this room. Please choose different dates.';
+      return;
+    }
     // Format dates as yyyy-MM-dd
     const formatDate = (d: any) => {
       if (!d) return '';
@@ -431,7 +454,13 @@ export class ReservationComponent implements OnInit {
       this.errorMessage = `Cannot reserve for more than ${selectedRoom.capacity} guests in this room.`;
       return;
     }
+    // refresh reserved dates for the selected room
     this.updateReservedDates();
+    // Validate no overlap before starting payment
+    if (this.rangeOverlapsReserved(this.newReservation.checkIn, this.newReservation.checkOut)) {
+      this.errorMessage = 'Selected dates overlap existing reservations for this room. Please choose different dates.';
+      return;
+    }
     const days = this.getReservationDays();
     const pricePerNight = selectedRoom?.price ?? 0;
     const totalPrice = days * pricePerNight;
